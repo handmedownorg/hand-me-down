@@ -1,0 +1,86 @@
+.entire-menu {
+  position: absolute;
+  padding: 20px;
+  width: 100%;
+  z-index: 2;
+  background-color: purple }
+
+.hamburguer {
+  width: 20px;
+  height: 20px;
+  display: block;
+  position: relative;
+  }
+  .hamburguer:after, .hamburguer:before, .hamburguer span, .hamburguer label {
+    content: ' ';
+    display: block;
+    width: 100%;
+    height: 4px;
+    background: #000;
+    left: 0;
+    position: absolute;
+    -webkit-transition: all 300ms ease-in-out;
+    transition: all 300ms ease-in-out; }
+  .hamburguer:before {
+    top: 0; }
+  .hamburguer:after {
+    bottom: 0; }
+  .hamburguer:focus {
+    outline: none; }
+  .hamburguer label {
+    width: 100%;
+    height: 100%;
+    background: none;
+    cursor: pointer;
+    z-index: 1000; }
+  .hamburguer span {
+    top: 8px; }
+
+#change-hamburguer {
+  display: none; }
+  #change-hamburguer:checked ~ .hamburguer:before, #change-hamburguer:checked ~ .hamburguer:after {
+    top: 10px;
+    margin-top: -10%; }
+  #change-hamburguer:checked ~ .hamburguer:before {
+    -ms-transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg); }
+  #change-hamburguer:checked ~ .hamburguer:after {
+    -ms-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg); }
+  #change-hamburguer:checked ~ .hamburguer span {
+    opacity: 0; }
+  #change-hamburguer:checked ~ .menu {
+    max-height: 200px; }
+
+.menu {
+  max-height: 0;
+  height: auto;
+  background: purple;
+  -webkit-transition: all 300ms ease-in-out;
+  transition: all 300ms ease-in-out;
+  overflow: hidden;
+  font-family: sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  width: 50%; }
+  .menu a {
+    text-decoration: none;
+    color: #fff;
+    padding: 5px 10px;
+    display: block;
+    text-transform: uppercase;
+    border-left: 5px solid purple; }
+    .menu a:hover {
+      border-left: 5px solid #e57373;
+      color: #e57373;
+      background: #222; }
+
+.clear-menu { /* clears the space for the hamburguer menu */
+  display: block;
+  height: 80px;
+  
+}
+
+/*# sourceMappingURL=hamburguer-menu.css.map */
