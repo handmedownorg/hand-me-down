@@ -1,0 +1,32 @@
+<form action="/createitem" method="POST" id="create-container" enctype="multipart/form-data">
+  <label for="itemname">Name your item</label>
+  <input id="itemname" type="text" name="itemname" placeholder="example: Sara's Book">
+
+  <br><br>
+
+  <label for="itemowner">Owner</label>
+  <input id="itemowner" type="text" name="itemowner" placeholder="Who owns this item?">
+
+  <br><br>
+
+  <label for="password">Item's ID: [SweetCharmanderClouds]</label>
+  <div id="itemID"></div>
+  <p>Write this ID somewhere in the item so you can take a photo of it.</p>
+
+  <br><br>
+
+  <label for="photo">Picture</label>
+  <input type="file" name="photo" class="form-control">
+
+  <br>
+  {{#if message }}
+  <div class="error-message">{{ message }}</div>
+  {{/if}}
+
+  <br><br>
+
+  <button>Hand down this item</button>
+
+  <a href="/about">How this works?</a>
+
+</form>

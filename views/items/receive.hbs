@@ -1,0 +1,30 @@
+<div>Name of this item</div>
+<div>Pepe's book</div>
+
+<br><br>
+
+<div for="itemowner">Owner of this item</div>
+<div>Pepe [mail]</div>
+
+<br><br>
+
+<label for="password">Item's ID: [SweetCharmanderClouds]</label>
+<div id="itemID"></div>
+
+<br><br>
+
+<form action="/createitem" method="POST" id="create-container" enctype="multipart/form-data">
+
+  <label for="photo">Picture</label>
+  <input type="file" name="photo" class="form-control">
+
+  <br>
+  {{#if message }}
+  <div class="error-message">{{ message }}</div>
+  {{/if}}
+
+  <br><br>
+
+  <button>Take care of this item</button>
+<a href="/about">How this works?</a>
+</form>
