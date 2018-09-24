@@ -85,6 +85,8 @@ const authRoutes = require('./routes/auth');
 app.use('/', authRoutes);
 
 const items = require('./routes/items');
+app.use('/items', items);
+      
 
 //const notifications = require('./routes/notification');
 //app.use('/', notifications);
