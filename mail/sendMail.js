@@ -1,7 +1,6 @@
 require('dotenv').config({path: '.private.env'});
 const nodemailer = require('nodemailer');
 
-
 if(!process.env.GMAIL_USER || ! process.env.GMAIL_PASSW ){
   throw new Error("You have to configure mail credentials in .private.env file.");
 }

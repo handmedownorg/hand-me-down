@@ -40,6 +40,7 @@ router.get("/inventory", (req, res, next) => {
 });
 
 function createNewOath(tag, itemname, giver, keeper, taker) {
+  console.log(taker)
   const newStatus = new Status({
     giverID: giver._id, //session
     takerID: taker._id,
@@ -53,16 +54,12 @@ function createNewOath(tag, itemname, giver, keeper, taker) {
     });
     newItem
       .save()
-      .then(() => {
-        let html = `<p>Somebody give you ${newItem.name}</p>
-      <p>Your confirmation code is: ${newStatus.tag}</p>
-      <a href=http://localhost:3000/take/${
-        newStatus._id
-      }>Click here to activate</a>`;
-        sendMail(keeper.email, "Do you outh to keep this?", html);
+      .then((newItem) => {
+      const html = require("../mail/template");
+        sendMail(keeper.email, "Do you outh to keep this?", html(newItem.name, newItem.tag, newItem._id));
       })
       .catch(err => {
-        res.render("auth/signup", { message: "Something went wrong" });
+        console.log(err)
       });
   });
 }
