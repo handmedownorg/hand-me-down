@@ -7,8 +7,9 @@ const Status = require("../models/Status");
 
 const sendMail = require("../mail/giveMail");
 
-router.post("/sendmail", (req, res, next) => {
-  Item.findById()
+router.post("/sendmail/:itemId", (req, res, next) => {
+  req.params.itemId
+  Item.findById(itemId)
     .then(item => {
       let statusID = item.statusID;
       let itemName = item.name;
