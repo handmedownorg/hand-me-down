@@ -7,7 +7,7 @@ if(!process.env.GMAIL_USER || ! process.env.GMAIL_PASSW ){
 }
 
 let transporter = nodemailer.createTransport({
-  service: 'Gmail',
+  service: 'gmail',
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_PASSW 
@@ -21,7 +21,9 @@ const sendMail = (to, subject, message)=>{
     html: `${message}`
   })
   .then(info => console.log(info))
-  .catch(error => console.log(error))
+  .catch(error => {
+    console.log(process.env.GMAIL_USER, process.env.GMAIL_PASSW);
+    console.log(error)})
 }
 
 module.exports = sendMail;

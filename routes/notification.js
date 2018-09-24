@@ -5,7 +5,7 @@ const User = require("../models/User");
 const Item = require("../models/Item");
 const Status = require("../models/Status");
 
-const sendMail = require("../mail/giveMail");
+const sendMail = require("../mail/sendMail");
 
 router.post("/sendmail/:itemId", (req, res, next) => {
 

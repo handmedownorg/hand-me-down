@@ -3,6 +3,7 @@ const router = express.Router();
 const Item = require("../models/Item");
 const Status = require("../models/Status");
 const User = require("../models/User");
+const sendMail = require("../mail/sendMail");
 
 router.get("/create", (req, res, next) => {
   let tag = "SweetCharmanderClouds"; //temporary tag
@@ -12,24 +13,22 @@ router.get("/create", (req, res, next) => {
 router.post("/create/:tag", (req, res, next) => {
   const tag = req.params.tag;
   const { itemname, itemowner, itemkeeper } = req.body;
-  console.log(itemkeeper, itemowner, itemname);
-  let taker, keeper;
-  const giver = req.user._id; //passport user
-  keeper = User.findOne({ username: itemkeeper })
-    .then(keeper => {
-      console.log(keeper);
-      taker = User.findOne({ username: itemowner });
-      return taker;
-    })
-    .then(taker => {
-      console.log(taker);
-      Item.findOne({ tag });
-    })
-    .then((uniqueTag) => {
-        createNewOath(tag, itemname, giver._id, keeper._id, taker);
-        res.redirect("/items/inventory");
-      
-    });
+
+  //console.log(itemkeeper, itemname, itemowner);
+  let promises = [];
+  const giver = req.user; //passport user
+  const taker = User.findOne({ username: itemowner });
+  const keeper = User.findOne({ username: itemkeeper });
+  promises.push(taker);
+  promises.push(keeper);
+  Promise.all(promises).then(promises => {
+    t = promises[0];
+    //console.log("The taker is " + t);
+    k = promises[1];
+    //console.log("The keeper is " + k);
+    createNewOath(tag, itemname, giver, k, t);
+    res.redirect("/items/inventory");
+  });
 });
 
 router.get("/receive", (req, res, next) => {
@@ -41,11 +40,10 @@ router.get("/inventory", (req, res, next) => {
 });
 
 function createNewOath(tag, itemname, giver, keeper, taker) {
-  console.log("CreateNewOath function" + tag, itemname, giver, keeper, taker);
   const newStatus = new Status({
-    giverID: giver, //session
-    takerID: taker,
-    currentHolderID: keeper
+    giverID: giver._id, //session
+    takerID: taker._id,
+    currentHolderID: keeper._id
   });
   newStatus.save().then(status => {
     const newItem = new Item({
@@ -53,7 +51,19 @@ function createNewOath(tag, itemname, giver, keeper, taker) {
       tag,
       statusID: status._id
     });
-    newItem.save();
+    newItem
+      .save()
+      .then(() => {
+        let html = `<p>Somebody give you ${newItem.name}</p>
+      <p>Your confirmation code is: ${newStatus.tag}</p>
+      <a href=http://localhost:3000/take/${
+        newStatus._id
+      }>Click here to activate</a>`;
+        sendMail(keeper.email, "Do you outh to keep this?", html);
+      })
+      .catch(err => {
+        res.render("auth/signup", { message: "Something went wrong" });
+      });
   });
 }
 
