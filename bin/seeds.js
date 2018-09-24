@@ -29,13 +29,13 @@ let users = [
   {
     username: "Laura",
     password: bcrypt.hashSync("1234", bcrypt.genSaltSync(bcryptSalt)),
-    email: "laura.miguelanez@gmail.com",
+    email: "handmedownapp@gmail.com",
     karma: 0
   },
   {
     username: "Raul",
     password: bcrypt.hashSync("1234", bcrypt.genSaltSync(bcryptSalt)),
-    email: "rulingester@hotmail.com",
+    email: "handmedownapp@gmail.com",
     karma: 100
   }
 ];
@@ -72,7 +72,7 @@ User.deleteMany()
     return usersCreated;
   })
   .then((usersCreated) => {
-    Status.drop();
+    Status.collection.drop();
     return usersCreated;
   })
   .then((usersC) => {
@@ -93,7 +93,7 @@ User.deleteMany()
     return statusesCreated;
   })
   .then((statusesCreated) => {
-    Item.drop();
+    Item.collection.drop();
     return statusesCreated;
   })
   .then((statusesC) => {

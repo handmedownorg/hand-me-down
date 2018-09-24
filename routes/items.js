@@ -4,10 +4,12 @@ const Item = require("../models/Item");
 const Status = require("../models/Status");
 const User = require("../models/User");
 const sendMail = require("../mail/sendMail");
+const hbs = require("handlebars");
+const fs = require("fs");
 
 router.get("/create", (req, res, next) => {
   let tag = "SweetCharmanderClouds"; //temporary tag
-  res.render("items/create", { tag });
+  res.render("items/give", { tag });
 });
 
 router.post("/create/:tag", (req, res, next) => {
@@ -31,8 +33,35 @@ router.post("/create/:tag", (req, res, next) => {
   });
 });
 
-router.get("/receive", (req, res, next) => {
-  res.render("items/receive");
+router.get("/take/:itemID", (req, res, next) => {
+  const itemID = encodeURIComponent(req.params.itemID);
+  const newKeeper = req.user;
+  let itemVar;
+  Item.findById(itemID)
+    .then(item => {
+      console.log ("---------------------------" + item);
+      itemVar = item;
+      return Status.findById(item.statusID);
+    })
+    .then(status => {
+      console.log("The keeper was " + status.currentHolderID);
+      return Status.findByIdAndUpdate(
+        { _id: status._id },
+        { currentHolderID: newKeeper._id }
+      );
+    })
+    .then(status => {
+      console.log("Now the keeper is " + status.currentHolderID);
+      res.render("items/take", {itemVar, status});
+    })
+    .catch(err => {
+      res.render("error", { message: "Keeper not found" });
+    });
+});
+
+router.post("/taken", (req, res, next) => {
+  
+  res.render("items/taken");
 });
 
 router.get("/inventory", (req, res, next) => {
@@ -56,13 +85,10 @@ function createNewOath(tag, itemname, giver, keeper, taker) {
       .then(() => {
         let html = `<p>Somebody give you ${newItem.name}</p>
       <p>Your confirmation code is: ${newStatus.tag}</p>
-      <a href=http://localhost:3000/take/${
-        newStatus._id
+      <a href=http://localhost:3000/items/take/${
+        newItem._id
       }>Click here to activate</a>`;
         sendMail(keeper.email, "Do you outh to keep this?", html);
-      })
-      .catch(err => {
-        res.render("auth/signup", { message: "Something went wrong" });
       });
   });
 }
