@@ -6,42 +6,110 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const User = require("../models/User");
+const Item = require("../models/Item");
+const Status = require("../models/Status");
 
 const bcryptSalt = 10;
 
 mongoose
-  .connect('mongodb://localhost/hand-me-down', {useNewUrlParser: true})
+  .connect(
+    "mongodb://localhost/hand-me-down",
+    { useNewUrlParser: true }
+  )
   .then(x => {
-    console.log(`Connected to Mongo! Database name: "${x.connections[0].name}"`)
+    console.log(
+      `Connected to Mongo! Database name: "${x.connections[0].name}"`
+    );
   })
   .catch(err => {
-    console.error('Error connecting to mongo', err)
+    console.error("Error connecting to mongo", err);
   });
 
 let users = [
   {
-    username: "alice",
-    password: bcrypt.hashSync("alice", bcrypt.genSaltSync(bcryptSalt)),
+    username: "Laura",
+    password: bcrypt.hashSync("1234", bcrypt.genSaltSync(bcryptSalt)),
+    email: "laura.miguelanez@gmail.com",
+    karma: 0
   },
   {
-    username: "bob",
-    password: bcrypt.hashSync("bob", bcrypt.genSaltSync(bcryptSalt)),
+    username: "Raul",
+    password: bcrypt.hashSync("1234", bcrypt.genSaltSync(bcryptSalt)),
+    email: "rulingester@hotmail.com",
+    karma: 100
   }
-]
+];
+
+let items = [
+  {
+    name: "Favourite book",
+    tag: "Please return it",
+  },
+  {
+    name: "Croquetas",
+    tag: "I hope you enjoy it",
+  }
+];
+
+let statuses = [
+  {
+    currentLocation: "40.3925362,-3.7004556",
+    indications: "At home from 3PM" //notes for pick up
+  },
+  {
+    currentLocation: "40.3925362,-3.7004556",
+    indications: "Keep them at room temperature" //notes for pick up
+  }
+];
 
 User.deleteMany()
-.then(() => {
-  return User.create(users)
-})
-.then(usersCreated => {
-  console.log(`${usersCreated.length} users created with the following id:`);
-  console.log(usersCreated.map(u => u._id));
-})
-.then(() => {
-  // Close properly the connection to Mongoose
-  mongoose.disconnect()
-})
-.catch(err => {
-  mongoose.disconnect()
-  throw err
-})
+  .then(() => {
+    return User.create(users);
+  })
+  .then(usersCreated => {
+    console.log(`${usersCreated.length} users created with the following id:`);
+    console.log(usersCreated.map(u => u._id));
+    return usersCreated;
+  })
+  .then((usersCreated) => {
+    Status.drop();
+    return usersCreated;
+  })
+  .then((usersC) => {
+    statuses[0].giverID = usersC[0]._id;
+    statuses[0].takerID = usersC[1]._id;
+    statuses[0].currentHolderID = usersC[0]._id;
+    statuses[1].giverID = usersC[1]._id;
+    statuses[1].takerID = usersC[0]._id;
+    statuses[1].currentHolderID = usersC[1]._id;
+    console.log(statuses);
+    return Status.create(statuses);
+  })
+  .then(statusesCreated => {
+    console.log(
+      `${statusesCreated.length} statuses created with the following id:`
+    );
+    console.log(statusesCreated.map(s => s._id));
+    return statusesCreated;
+  })
+  .then((statusesCreated) => {
+    Item.drop();
+    return statusesCreated;
+  })
+  .then((statusesC) => {
+    items[0].statusID = statusesC[0]._id;
+    items[1].statusID = statusesC[1]._id;
+    return Item.create(items);
+  })
+  .then(itemsCreated => {
+    console.log(`${itemsCreated.length} items created with the following id:`);
+    console.log(itemsCreated.map(i => i._id));
+  })
+  .then(() => {
+    // Close properly the connection to Mongoose
+    mongoose.disconnect();
+  })
+  .catch(err => {
+    mongoose.disconnect();
+    throw err;
+  });
