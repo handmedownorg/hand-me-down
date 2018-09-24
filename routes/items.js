@@ -25,9 +25,7 @@ router.post("/create/:tag", (req, res, next) => {
   promises.push(keeper);
   Promise.all(promises).then(promises => {
     t = promises[0];
-    //console.log("The taker is " + t);
     k = promises[1];
-    //console.log("The keeper is " + k);
     createNewOath(tag, itemname, giver, k, t);
     res.redirect("/items/inventory");
   });
@@ -35,11 +33,18 @@ router.post("/create/:tag", (req, res, next) => {
 
 router.get("/take/:itemID", (req, res, next) => {
   const itemID = encodeURIComponent(req.params.itemID);
+ // console.log(itemID);
+  res.render("items/take", {itemID});
+});
+
+router.post("/taken/:itemID", (req, res, next) => {
+  const itemID = encodeURIComponent(req.params.itemID);
   const newKeeper = req.user;
   let itemVar;
+  
   Item.findById(itemID)
     .then(item => {
-      console.log ("---------------------------" + item);
+      console.log("---------------------------" + item);
       itemVar = item;
       return Status.findById(item.statusID);
     })
@@ -52,15 +57,12 @@ router.get("/take/:itemID", (req, res, next) => {
     })
     .then(status => {
       console.log("Now the keeper is " + status.currentHolderID);
-      res.render("items/take", {itemVar, status});
+      res.render("items/take", { itemVar, status });
     })
     .catch(err => {
       res.render("error", { message: "Keeper not found" });
     });
-});
 
-router.post("/taken", (req, res, next) => {
-  
   res.render("items/taken");
 });
 
@@ -80,16 +82,14 @@ function createNewOath(tag, itemname, giver, keeper, taker) {
       tag,
       statusID: status._id
     });
-    newItem
-      .save()
-      .then(() => {
-        let html = `<p>Somebody give you ${newItem.name}</p>
+    newItem.save().then(() => {
+      let html = `<p>Somebody give you ${newItem.name}</p>
       <p>Your confirmation code is: ${newStatus.tag}</p>
       <a href=http://localhost:3000/items/take/${
         newItem._id
       }>Click here to activate</a>`;
-        sendMail(keeper.email, "Do you outh to keep this?", html);
-      });
+      sendMail(keeper.email, "Do you outh to keep this?", html);
+    });
   });
 }
 
