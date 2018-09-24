@@ -1,4 +1,5 @@
-<form action="/createitem" method="POST" id="create-container" enctype="multipart/form-data">
+<form action="/items/create/{{tag}}" method="POST" id="create-container">
+
   <label for="itemname">Name your item</label>
   <input id="itemname" type="text" name="itemname" placeholder="example: Sara's Book">
 
@@ -9,14 +10,19 @@
 
   <br><br>
 
-  <label for="password">Item's ID: [SweetCharmanderClouds]</label>
-  <div id="itemID"></div>
-  <p>Write this ID somewhere in the item so you can take a photo of it.</p>
+  <label for="itemkeeper">Who are you giving the item to?</label>
+  <input id="itemkeeper" type="text" name="itemkeeper" placeholder="Who will keep this item?">
 
   <br><br>
 
+  <label for="password">Item's tag: {{tag}}</label>
+  <div id="itemID"></div>
+  <p>Write this tag and stick the post-it somewhere in the item.</p>
+
+{{!--   <br><br>
+
   <label for="photo">Picture</label>
-  <input type="file" name="photo" class="form-control">
+  <input type="file" name="photo" class="form-control"> --}}
 
   <br>
   {{#if message }}
@@ -25,7 +31,7 @@
 
   <br><br>
 
-  <button>Hand down this item</button>
+  <button type="submit" >Hand down this item</button>
 
   <a href="/about">How this works?</a>
 

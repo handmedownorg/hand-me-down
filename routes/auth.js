@@ -14,7 +14,7 @@ router.get("/login", (req, res, next) => {
 
 router.post("/login", passport.authenticate("local", {
   successRedirect: "/",
-  failureRedirect: "/auth/login",
+  failureRedirect: "/login",
   failureFlash: true,
   passReqToCallback: true
 }));
@@ -50,7 +50,7 @@ router.post("/signup", (req, res, next) => {
       res.redirect("/");
     })
     .catch(err => {
-      res.render("auth/signup", { message: "Something went wrong" });
+      res.render("/signup", { message: "Something went wrong" });
     })
   });
 });

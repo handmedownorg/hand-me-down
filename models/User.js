@@ -5,8 +5,6 @@ const userSchema = new Schema({
   username: String,
   password: String,
   email: String,
-  password: String,
-  inventoryID: String,
   karma: Number
 }, {
   timestamps: {
