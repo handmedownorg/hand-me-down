@@ -14,9 +14,11 @@ router.get("/create", ensureLogin.ensureLoggedIn('/login'), (req, res, next) => 
   res.render("items/give", { tag });
 });
 
-router.post("/create/:tag", ensureLogin.ensureLoggedIn('/'), (req, res, next) => {
+router.post("/create/:tag", uploadCloud.single('tag-photo'), ensureLogin.ensureLoggedIn('/'), (req, res, next) => {
   const tag = req.params.tag;
   const { itemname, itemowner, itemkeeper } = req.body;
+  const imgPath = req.file.url;
+  const imgName = req.file.originalname;
 
   let promises = [];
   const giver = req.user; //passport user
@@ -28,7 +30,7 @@ router.post("/create/:tag", ensureLogin.ensureLoggedIn('/'), (req, res, next) =>
     t = promises[0];
     k = promises[1];
     createNewOath(tag, itemname, giver, k, t);
-    res.redirect("/items/inventory");
+    res.redirect("/items/inventory", {imgPath});
   });
 });
 

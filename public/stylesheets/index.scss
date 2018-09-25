@@ -1,3 +1,32 @@
+@import "variables.sass"; 
+
+body {
+  color: $primary-color;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.form-wrapper{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-content: center;
+}
+.form{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-content: center;
+  width: 300px;
+}
+.input-div{
+  padding: 10px;
+}
+button{
+  color: $primary-color;
+  background-color: $secondary-color;
+}
+
+
 .main-logo {
   position: absolute;
   top: 100px;
