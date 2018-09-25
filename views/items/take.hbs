@@ -1,19 +1,19 @@
-<div>Name of this item</div>
-<div>Pepe's book</div>
+<h2>You are taking an oath:</h2>
+
+<div>Name of this item: {{item.name}}</div>
 
 <br><br>
 
-<div for="itemowner">Owner of this item</div>
-<div>Pepe [mail]</div>
+<div>Owner of this item: {{user.username}} </div>
 
 <br><br>
 
-<label for="password">Item's ID: [SweetCharmanderClouds]</label>
+<label for="password">Item's ID: {{item.tag}}</label>
 <div id="itemID"></div>
 
 <br><br>
 
-<form action="/items/taken/{{itemID}}" method="POST" id="taken-container">
+<form action="/items/taken/{{item._id}}" method="POST" id="taken-container">
 
   <br>
   {{#if message }}

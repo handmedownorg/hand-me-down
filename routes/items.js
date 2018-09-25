@@ -16,7 +16,6 @@ router.post("/create/:tag", (req, res, next) => {
   const tag = req.params.tag;
   const { itemname, itemowner, itemkeeper } = req.body;
 
-  //console.log(itemkeeper, itemname, itemowner);
   let promises = [];
   const giver = req.user; //passport user
   const taker = User.findOne({ username: itemowner });
@@ -33,18 +32,28 @@ router.post("/create/:tag", (req, res, next) => {
 
 router.get("/take/:itemID", (req, res, next) => {
   const itemID = encodeURIComponent(req.params.itemID);
- // console.log(itemID);
-  res.render("items/take", {itemID});
+  let item;
+  Item.findById(itemID).
+    populate("statusID")
+    .then(itemObj => {
+      item = itemObj
+      //console.log("item: --->" + item.statusID[0].takerID);
+      return User.findById(item.statusID[0].takerID)
+    })
+    .then(user => {
+      //console.log(item, user)
+      res.render("items/take", { item, user })
+    })
+    .catch(e => console.log(e))
 });
 
-router.post("/taken/:itemID", (req, res, next) => {
+router.post("/taken/:itemID", (req, res, next) => {  //refactor this using populate
   const itemID = encodeURIComponent(req.params.itemID);
   const newKeeper = req.user;
   let itemVar;
-  
+
   Item.findById(itemID)
     .then(item => {
-      console.log("---------------------------" + item);
       itemVar = item;
       return Status.findById(item.statusID);
     })
@@ -57,13 +66,11 @@ router.post("/taken/:itemID", (req, res, next) => {
     })
     .then(status => {
       console.log("Now the keeper is " + status.currentHolderID);
-      res.render("items/take", { itemVar, status });  //<-------------------------------
+      res.render("items/confirmation");
     })
     .catch(err => {
       res.render("error", { message: "Keeper not found" });
     });
-
-  //res.render("items/taken");
 });
 
 router.get("/inventory", (req, res, next) => {
@@ -71,7 +78,6 @@ router.get("/inventory", (req, res, next) => {
 });
 
 function createNewOath(tag, itemname, giver, keeper, taker) {
-  console.log(taker)
   const newStatus = new Status({
     giverID: giver._id, //session
     takerID: taker._id,
@@ -86,7 +92,7 @@ function createNewOath(tag, itemname, giver, keeper, taker) {
     newItem
       .save()
       .then((newItem) => {
-      const html = require("../mail/template");
+        const html = require("../mail/template");
         sendMail(keeper.email, "Do you outh to keep this?", html(newItem.name, newItem.tag, newItem._id));
       })
       .catch(err => {

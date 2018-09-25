@@ -3,9 +3,9 @@ const Schema   = mongoose.Schema;
 
 const statusSchema = new Schema({
   currentLocation: String,
-  giverID: String,
-  takerID: String,
-  currentHolderID: String,
+  giverID: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  takerID: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  currentHolderID: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   indications: String, //notes for pick up
   tradeHistory: []
 }, {
