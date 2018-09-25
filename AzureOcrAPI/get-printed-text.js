@@ -1,8 +1,7 @@
 // "use strict";
 const request = require("request");
 
-const subscriptionKey = "eaaddf9ce76e44d3a26929c3dc161266";
-//const subscriptionKey = process.env.AZUREKEY;
+const subscriptionKey = process.env.AZUREKEY;
 
 const uriBase =
   "https://westcentralus.api.cognitive.microsoft.com/vision/v2.0/recognizeText";
