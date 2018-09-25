@@ -4,6 +4,7 @@ const Item = require("../models/Item");
 const Status = require("../models/Status");
 const User = require("../models/User");
 const sendMail = require("../mail/sendMail");
+const uploadCloud = require('../config/cloudinary.js');
 const hbs = require("handlebars");
 const fs = require("fs");
 const ensureLogin = require('connect-ensure-login')
