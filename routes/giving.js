@@ -1,3 +1,5 @@
+
+
 const express = require("express");
 const router = express.Router();
 const Item = require("../models/Item");
@@ -57,6 +59,8 @@ router.post("/taken/:itemID", ensureLogin.ensureLoggedIn('/'), (req, res, next) 
     .then(item => {
       itemVar = item;
       return Status.findById(item.statusID);
+      const htmlNotification = require('../mail/templateNotification')
+      //sendMail(taker.email, "Your item " + item.name + " is changing hands!", htmlNotification(item.name, item.tag))
     })
     .then(status => {
       console.log("The keeper was " + status.currentHolderID);
@@ -104,8 +108,8 @@ function createNewOath(tag, body, giver) {
           newItem
             .save()
             .then((newItem) => {
-              const html = require("../mail/template");
-              return sendMail(keeper.email, "Do you outh to keep this?", html(newItem.name, newItem.tag, newItem._id));
+              const htmlGiving = require("../mail/templateGiving");
+              return sendMail(keeper.email, "Do you outh to keep this?", htmlGiving(newItem.name, newItem.tag, newItem._id));
             })
         });
     });
