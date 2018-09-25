@@ -35,17 +35,10 @@
         $("#responseTextArea").val("Handwritten text submitted. " +
           "Waiting 10 seconds to retrieve the recognized text.");
 
-        // Note: The response may not be immediately available. Handwriting
-        // recognition is an asynchronous operation that can take a variable
-        // amount of time depending on the length of the text you want to
-        // recognize. You may need to wait or retry the GET operation.
-        //
-        // Wait ten seconds before making the second REST API call.
         setTimeout(function () {
-          // "Operation-Location" in the response contains the URI
-          // to retrieve the recognized text.
+
           var operationLocation = jqXHR.getResponseHeader("Operation-Location");
-          console.log(operationLocation)
+
 
           // Make the second REST API call and get the response.
           $.ajax({
@@ -63,7 +56,15 @@
 
             .done(function (data) {
               // Show formatted JSON on webpage.
-              $("#responseTextArea").val(JSON.stringify(data, null, 2));
+              let resJSON = JSON.stringify(data, null, 2);
+              //$("#responseTextArea").val(resJSON);
+              let resObj = JSON.parse(resJSON);
+              
+              let resTextArrr = resObj.recognitionResult.lines;
+              let resText = resTextArrr.map(e=>e.text).join();
+              console.log(resText);
+
+              $("#responseTextArea").val(resText);
             })
 
             .fail(function (jqXHR, textStatus, errorThrown) {
@@ -76,7 +77,7 @@
                   jQuery.parseJSON(jqXHR.responseText).error.message;
               alert(errorString);
             });
-        }, 10000);
+        }, 5000);
       })
 
       .fail(function (jqXHR, textStatus, errorThrown) {
@@ -101,7 +102,7 @@
   <form action="/items/create/{{tag}}" method="POST" id="create-container" enctype="multipart/form-data" class="form">
     <div class="input-div">
       <label for="itemname">Name your item</label>
-      <input id="itemname" type="text" name="itemname" placeholder="example: Sara's Book" value = "A basket full of grapes">
+      <input id="itemname" type="text" name="itemname" placeholder="example: Sara's Book" value="A basket full of grapes">
     </div>
     <div class="input-div">
       <label for="itemowner">Owner</label>
@@ -129,7 +130,7 @@
   </form>
 </div>
 
-{{!-- <div id="image-to-text">
+<div id="image-to-text">
   {{!-- <h1>Read handwritten image:</h1>
   Enter the URL to an image of handwritten text, then click
   the <strong>Read image</strong> button.
@@ -150,6 +151,6 @@
       <img id="sourceImage" width="400" />
     </div>
   </div>
-</div> --}}
+</div>
 
 <a href="/about">How this works?</a>
