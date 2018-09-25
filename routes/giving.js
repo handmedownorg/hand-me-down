@@ -14,11 +14,14 @@ router.get("/create", ensureLogin.ensureLoggedIn('/login'), (req, res, next) => 
   res.render("items/give", { tag });
 });
 
-router.post("/create/:tag", ensureLogin.ensureLoggedIn('/'), (req, res, next) => {
+router.post("/create/:tag", uploadCloud.single('tag-photo'), ensureLogin.ensureLoggedIn('/'), (req, res, next) => {
   const tag = req.params.tag;
   const { itemname, itemowner, itemkeeper } = req.body;
   const body = { itemname, itemowner, itemkeeper };
   const giver = req.user; //passport user
+  
+  const imgPath = req.file.url;
+  const imgName = req.file.originalname;
 
   createNewOath(tag, body, giver)
   //.then necesary here to prevent the race condition
