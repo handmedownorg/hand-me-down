@@ -17,18 +17,22 @@ router.get("/create", ensureLogin.ensureLoggedIn('/login'), (req, res, next) => 
 router.post("/create/:tag", uploadCloud.single('tag-photo'), ensureLogin.ensureLoggedIn('/'), (req, res, next) => {
   const tag = req.params.tag;
   const { itemname, itemowner, itemkeeper } = req.body;
-  const body = { itemname, itemowner, itemkeeper };
-  const giver = req.user; //passport user
-  
+
   const imgPath = req.file.url;
   const imgName = req.file.originalname;
 
-  createNewOath(tag, body, giver)
-  //.then necesary here to prevent the race condition
-    res.redirect("/items/inventory")
-
-
-
+  let promises = [];
+  const giver = req.user; //passport user
+  const taker = User.findOne({ username: itemowner });
+  const keeper = User.findOne({ username: itemkeeper });
+  promises.push(taker);
+  promises.push(keeper);
+  Promise.all(promises).then(promises => {
+    t = promises[0];
+    k = promises[1];
+    createNewOath(tag, itemname, giver, k, t);
+    res.redirect("/items/inventory", {imgPath});
+  });
 });
 
 router.get("/take/:itemID", ensureLogin.ensureLoggedIn('/'), (req, res, next) => {
@@ -42,7 +46,6 @@ router.get("/take/:itemID", ensureLogin.ensureLoggedIn('/'), (req, res, next) =>
       return User.findById(item.statusID[0].takerID)
     })
     .then(user => {
-      //console.log(item, user)
       res.render("items/take", { item, user })
     })
     .catch(e => console.log(e))
@@ -78,37 +81,28 @@ router.get("/inventory", ensureLogin.ensureLoggedIn('/login'), (req, res, next) 
   res.render("items/inventory");
 });
 
-function createNewOath(tag, body, giver) {
-
-  let promises = [];
-  promises.push(User.findOne({ username: body.itemowner }));
-  promises.push(User.findOne({ username: body.itemkeeper }));
-
-  Promise.all(promises)
-    .then(promises => {
-      taker = promises[0];
-      keeper = promises[1];
-      const newStatus = new Status({
-        giverID: giver._id, //session
-        takerID: taker._id,
-        currentHolderID: keeper._id
-      });
-
-      newStatus.save()
-        .then(status => {
-          const newItem = new Item({
-            name: body.itemname,
-            tag,
-            statusID: status._id
-          });
-          newItem
-            .save()
-            .then((newItem) => {
-              const html = require("../mail/template");
-              return sendMail(keeper.email, "Do you outh to keep this?", html(newItem.name, newItem.tag, newItem._id));
-            })
-        });
+function createNewOath(tag, itemname, giver, keeper, taker) {
+  const newStatus = new Status({
+    giverID: giver._id, //session
+    takerID: taker._id,
+    currentHolderID: keeper._id
+  });
+  newStatus.save().then(status => {
+    const newItem = new Item({
+      name: itemname,
+      tag,
+      statusID: status._id
     });
+    newItem
+      .save()
+      .then((newItem) => {
+        const html = require("../mail/template");
+        sendMail(keeper.email, "Do you outh to keep this?", html(newItem.name, newItem.tag, newItem._id));
+      })
+      .catch(err => {
+        console.log(err)
+      });
+  });
 }
 
 module.exports = router;
