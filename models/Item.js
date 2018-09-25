@@ -4,7 +4,7 @@ const Schema   = mongoose.Schema;
 const itemSchema = new Schema({
   name: String,
   tag: String,
-  statusID: String,
+  statusID: String, // {type: Schema.Types.ObjectID , ref:'Status'} 
 }, {
   timestamps: {
     createdAt: 'created_at',
