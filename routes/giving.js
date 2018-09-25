@@ -6,13 +6,14 @@ const User = require("../models/User");
 const sendMail = require("../mail/sendMail");
 const hbs = require("handlebars");
 const fs = require("fs");
+const ensureLogin = require('connect-ensure-login')
 
-router.get("/create", (req, res, next) => {
+router.get("/create", ensureLogin.ensureLoggedIn('/login'), (req, res, next) => {
   let tag = "SweetCharmanderClouds"; //temporary tag
   res.render("items/give", { tag });
 });
 
-router.post("/create/:tag", (req, res, next) => {
+router.post("/create/:tag", ensureLogin.ensureLoggedIn('/'), (req, res, next) => {
   const tag = req.params.tag;
   const { itemname, itemowner, itemkeeper } = req.body;
 
@@ -30,7 +31,7 @@ router.post("/create/:tag", (req, res, next) => {
   });
 });
 
-router.get("/take/:itemID", (req, res, next) => {
+router.get("/take/:itemID", ensureLogin.ensureLoggedIn('/'), (req, res, next) => {
   const itemID = encodeURIComponent(req.params.itemID);
   let item;
   Item.findById(itemID).
@@ -47,7 +48,7 @@ router.get("/take/:itemID", (req, res, next) => {
     .catch(e => console.log(e))
 });
 
-router.post("/taken/:itemID", (req, res, next) => {  //refactor this using populate
+router.post("/taken/:itemID", ensureLogin.ensureLoggedIn('/'), (req, res, next) => {  //refactor this using populate
   const itemID = encodeURIComponent(req.params.itemID);
   const newKeeper = req.user;
   let itemVar;
@@ -73,7 +74,7 @@ router.post("/taken/:itemID", (req, res, next) => {  //refactor this using popul
     });
 });
 
-router.get("/inventory", (req, res, next) => {
+router.get("/inventory", ensureLogin.ensureLoggedIn('/login'), (req, res, next) => {
   res.render("items/inventory");
 });
 
