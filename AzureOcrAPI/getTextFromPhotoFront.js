@@ -1,6 +1,6 @@
 function processImage() {
   
-  var subscriptionKey = "eaaddf9ce76e44d3a26929c3dc161266";
+  
 
   var uriBase =
     "https://westcentralus.api.cognitive.microsoft.com/vision/v2.0/recognizeText";
