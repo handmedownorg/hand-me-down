@@ -13,7 +13,7 @@
 
 <br><br>
 
-<form action="/createitem" method="POST" id="create-container">
+<form action="/items/taken/{{itemID}}" method="POST" id="taken-container">
 
   <br>
   {{#if message }}
@@ -23,5 +23,5 @@
   <br><br>
 
   <button>Take care of this item</button>
-<a href="/about">How this works?</a>
+  <a href="/about">How this works?</a>
 </form>

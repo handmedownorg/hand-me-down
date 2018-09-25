@@ -4,10 +4,12 @@ const Item = require("../models/Item");
 const Status = require("../models/Status");
 const User = require("../models/User");
 const sendMail = require("../mail/sendMail");
+const hbs = require("handlebars");
+const fs = require("fs");
 
 router.get("/create", (req, res, next) => {
   let tag = "SweetCharmanderClouds"; //temporary tag
-  res.render("items/create", { tag });
+  res.render("items/give", { tag });
 });
 
 router.post("/create/:tag", (req, res, next) => {
@@ -23,16 +25,45 @@ router.post("/create/:tag", (req, res, next) => {
   promises.push(keeper);
   Promise.all(promises).then(promises => {
     t = promises[0];
-    //console.log("The taker is " + t);
     k = promises[1];
-    //console.log("The keeper is " + k);
     createNewOath(tag, itemname, giver, k, t);
     res.redirect("/items/inventory");
   });
 });
 
-router.get("/receive", (req, res, next) => {
-  res.render("items/receive");
+router.get("/take/:itemID", (req, res, next) => {
+  const itemID = encodeURIComponent(req.params.itemID);
+ // console.log(itemID);
+  res.render("items/take", {itemID});
+});
+
+router.post("/taken/:itemID", (req, res, next) => {
+  const itemID = encodeURIComponent(req.params.itemID);
+  const newKeeper = req.user;
+  let itemVar;
+  
+  Item.findById(itemID)
+    .then(item => {
+      console.log("---------------------------" + item);
+      itemVar = item;
+      return Status.findById(item.statusID);
+    })
+    .then(status => {
+      console.log("The keeper was " + status.currentHolderID);
+      return Status.findByIdAndUpdate(
+        { _id: status._id },
+        { currentHolderID: newKeeper._id }
+      );
+    })
+    .then(status => {
+      console.log("Now the keeper is " + status.currentHolderID);
+      res.render("items/take", { itemVar, status });  //<-------------------------------
+    })
+    .catch(err => {
+      res.render("error", { message: "Keeper not found" });
+    });
+
+  res.render("items/taken");
 });
 
 router.get("/inventory", (req, res, next) => {
