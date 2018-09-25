@@ -1,21 +1,8 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 <script type="text/javascript">
   function processImage() {
-    // **********************************************
-    // *** Update or verify the following values. ***
-    // **********************************************
 
-    // Replace <Subscription Key> with your valid subscription key.
     var subscriptionKey = "eaaddf9ce76e44d3a26929c3dc161266";
-
-    // You must use the same Azure region in your REST API method as you used to
-    // get your subscription keys. For example, if you got your subscription keys
-    // from the West US region, replace "westcentralus" in the URL
-    // below with "westus".
-    //
-    // Free trial subscription keys are generated in the West Central US region.
-    // If you use a free trial subscription key, you shouldn't need to change
-    // this region.
     var uriBase =
       "https://westcentralus.api.cognitive.microsoft.com/vision/v2.0/recognizeText";
 
@@ -27,11 +14,6 @@
     // Display the image.
     var sourceImageUrl = document.getElementById("inputImage").value;
     document.querySelector("#sourceImage").src = sourceImageUrl;
-    console.log(uriBase + "?" + $.param(params))
-    // This operation requires two REST API calls. One to submit the image
-    // for processing, the other to retrieve the text found in the image.
-    //
-    // Make the first REST API call to submit the image for processing.
     $.ajax({
       url: uriBase + "?" + $.param(params),
 
@@ -113,7 +95,6 @@
 {{!-- <script src="./AzureOcrAPI/getTextFromPhotoFront.js"></script> --}}
 
 <form action="/items/create/{{tag}}" method="POST" id="create-container">
-
   <label for="itemname">Name your item</label>
   <input id="itemname" type="text" name="itemname" placeholder="example: Sara's Book">
 
