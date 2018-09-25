@@ -2,7 +2,11 @@ require('dotenv').config({path: '.private.env'});
 
 function processImage() {
   
+<<<<<<< HEAD
   var subscriptionKey = process.env.AZUREKEY;
+=======
+  
+>>>>>>> b4ff6202399ad9a50a7c0287976e8ceec2cffaa5
 
   var uriBase =
     "https://westcentralus.api.cognitive.microsoft.com/vision/v2.0/recognizeText";
