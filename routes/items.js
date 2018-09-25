@@ -63,7 +63,7 @@ router.post("/taken/:itemID", (req, res, next) => {
       res.render("error", { message: "Keeper not found" });
     });
 
-  res.render("items/taken");
+  //res.render("items/taken");
 });
 
 router.get("/inventory", (req, res, next) => {
