@@ -1,4 +1,4 @@
-const html =  (name, tag, id) => `<!DOCTYPE html>
+const htmlGiving =  (name, tag, id) => `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
