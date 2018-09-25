@@ -1,3 +1,117 @@
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script type="text/javascript">
+  function processImage() {
+    // **********************************************
+    // *** Update or verify the following values. ***
+    // **********************************************
+
+    // Replace <Subscription Key> with your valid subscription key.
+    var subscriptionKey = "eaaddf9ce76e44d3a26929c3dc161266";
+
+    // You must use the same Azure region in your REST API method as you used to
+    // get your subscription keys. For example, if you got your subscription keys
+    // from the West US region, replace "westcentralus" in the URL
+    // below with "westus".
+    //
+    // Free trial subscription keys are generated in the West Central US region.
+    // If you use a free trial subscription key, you shouldn't need to change
+    // this region.
+    var uriBase =
+      "https://westcentralus.api.cognitive.microsoft.com/vision/v2.0/recognizeText";
+
+    // Request parameter.
+    var params = {
+      "mode": "Handwritten",
+    };
+
+    // Display the image.
+    var sourceImageUrl = document.getElementById("inputImage").value;
+    document.querySelector("#sourceImage").src = sourceImageUrl;
+
+    // This operation requires two REST API calls. One to submit the image
+    // for processing, the other to retrieve the text found in the image.
+    //
+    // Make the first REST API call to submit the image for processing.
+    $.ajax({
+      url: uriBase + "?" + $.param(params),
+
+      // Request headers.
+      beforeSend: function (jqXHR) {
+        jqXHR.setRequestHeader("Content-Type", "application/json");
+        jqXHR.setRequestHeader("Ocp-Apim-Subscription-Key", subscriptionKey);
+      },
+
+      type: "POST",
+
+      // Request body.
+      data: '{"url": ' + '"' + sourceImageUrl + '"}',
+    })
+
+      .done(function (data, textStatus, jqXHR) {
+        // Show progress.
+        $("#responseTextArea").val("Handwritten text submitted. " +
+          "Waiting 10 seconds to retrieve the recognized text.");
+
+        // Note: The response may not be immediately available. Handwriting
+        // recognition is an asynchronous operation that can take a variable
+        // amount of time depending on the length of the text you want to
+        // recognize. You may need to wait or retry the GET operation.
+        //
+        // Wait ten seconds before making the second REST API call.
+        setTimeout(function () {
+          // "Operation-Location" in the response contains the URI
+          // to retrieve the recognized text.
+          var operationLocation = jqXHR.getResponseHeader("Operation-Location");
+
+          // Make the second REST API call and get the response.
+          $.ajax({
+            url: operationLocation,
+
+            // Request headers.
+            beforeSend: function (jqXHR) {
+              jqXHR.setRequestHeader("Content-Type", "application/json");
+              jqXHR.setRequestHeader(
+                "Ocp-Apim-Subscription-Key", subscriptionKey);
+            },
+
+            type: "GET",
+          })
+
+            .done(function (data) {
+              // Show formatted JSON on webpage.
+              $("#responseTextArea").val(JSON.stringify(data, null, 2));
+            })
+
+            .fail(function (jqXHR, textStatus, errorThrown) {
+              // Display error message.
+              var errorString = (errorThrown === "") ? "Error. " :
+                errorThrown + " (" + jqXHR.status + "): ";
+              errorString += (jqXHR.responseText === "") ? "" :
+                (jQuery.parseJSON(jqXHR.responseText).message) ?
+                  jQuery.parseJSON(jqXHR.responseText).message :
+                  jQuery.parseJSON(jqXHR.responseText).error.message;
+              alert(errorString);
+            });
+        }, 10000);
+      })
+
+      .fail(function (jqXHR, textStatus, errorThrown) {
+        // Put the JSON description into the text area.
+        $("#responseTextArea").val(JSON.stringify(jqXHR, null, 2));
+
+        // Display error message.
+        var errorString = (errorThrown === "") ? "Error. " :
+          errorThrown + " (" + jqXHR.status + "): ";
+        errorString += (jqXHR.responseText === "") ? "" :
+          (jQuery.parseJSON(jqXHR.responseText).message) ?
+            jQuery.parseJSON(jqXHR.responseText).message :
+            jQuery.parseJSON(jqXHR.responseText).error.message;
+        alert(errorString);
+      });
+  };
+</script>
+{{!-- <script src="./AzureOcrAPI/getTextFromPhotoFront.js"></script> --}}
+
 <form action="/items/create/{{tag}}" method="POST" id="create-container">
 
   <label for="itemname">Name your item</label>
@@ -19,7 +133,32 @@
   <div id="itemID"></div>
   <p>Write this tag and stick the post-it somewhere in the item.</p>
 
-{{!--   <br><br>
+
+
+  <div id="image-to-text">
+    <h1>Read handwritten image:</h1>
+    Enter the URL to an image of handwritten text, then click
+    the <strong>Read image</strong> button.
+    <br><br>
+    Image to read:
+    <input type="text" name="inputImage" id="inputImage" value="https://res.cloudinary.com/handmedown/image/upload/v1537867904/handmedowntags/tag4.jpg" />
+    <button onclick="processImage()">Read image</button>
+    <br><br>
+    <div id="wrapper" style="width:1020px; display:table;">
+      <div id="jsonOutput" style="width:600px; display:table-cell;">
+        Response:
+        <br><br>
+        <textarea id="responseTextArea" class="UIInput" style="width:580px; height:400px;"></textarea>
+      </div>
+      <div id="imageDiv" style="width:420px; display:table-cell;">
+        Source image:
+        <br><br>
+        <img id="sourceImage" width="400" />
+      </div>
+    </div>
+  </div>
+
+  {{!-- <br><br>
 
   <label for="photo">Picture</label>
   <input type="file" name="photo" class="form-control"> --}}
@@ -31,7 +170,7 @@
 
   <br><br>
 
-  <button type="submit" >Hand down this item</button>
+  <button type="submit">Hand down this item</button>
 
   <a href="/about">How this works?</a>
 

@@ -1,23 +1,19 @@
 "use strict";
-
 const request = require("request");
 
-// Replace <Subscription Key> with your valid subscription key.
 const subscriptionKey = "eaaddf9ce76e44d3a26929c3dc161266";
 //const subscriptionKey = process.env.AZUREKEY;
 
-// You must use the same location in your REST call as you used to get your
-// subscription keys. For example, if you got your subscription keys from
-// westus, replace "westcentralus" in the URL below with "westus".
-const uriBase =
-  "https://westcentralus.api.cognitive.microsoft.com/vision/v2.0/ocr";
+const uriBase = "https://westcentralus.api.cognitive.microsoft.com/vision/v2.0/recognizeText";
+  //"https://westcentralus.api.cognitive.microsoft.com/vision/v2.0/ocr";
 
-const imageUrl ="https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Atomist_quote_from_Democritus.png/338px-Atomist_quote_from_Democritus.png";
-//const imageUrl = "https://www.dropbox.com/s/yrb52ilco4xcyu7/tag.jpg?dl=0";
+//const imageUrl ="https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Atomist_quote_from_Democritus.png/338px-Atomist_quote_from_Democritus.png";
+const imageUrl = "https://res.cloudinary.com/handmedown/image/upload/v1537867904/handmedowntags/tag4.jpg";
 
 // Request parameters.
 const params = {
-  language: "unk",
+  //mode: "Handwritten",
+  language: "unk", //"en"
   detectOrientation: "true"
 };
 
@@ -40,3 +36,17 @@ request.post(options, (error, response, body) => {
   console.log("JSON Response\n");
   console.log(jsonResponse);
 });
+
+
+request.get(options, (error, response, body) => {
+    if (error) {
+      console.log("Error: ", error);
+      return;
+    }
+    let jsonResponse = JSON.stringify(JSON.parse(body), null, "  ");
+    console.log("JSON Response\n");
+    console.log(jsonResponse);
+  });
+
+
+
