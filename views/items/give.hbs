@@ -27,7 +27,7 @@
     // Display the image.
     var sourceImageUrl = document.getElementById("inputImage").value;
     document.querySelector("#sourceImage").src = sourceImageUrl;
-
+    console.log(uriBase + "?" + $.param(params))
     // This operation requires two REST API calls. One to submit the image
     // for processing, the other to retrieve the text found in the image.
     //
@@ -49,9 +49,8 @@
 
       .done(function (data, textStatus, jqXHR) {
         // Show progress.
-        $("#responseTextArea").val("Handwritten text submitted. " +
-          "Waiting 10 seconds to retrieve the recognized text.");
-
+        $("#responseTextArea").val(textStatus);
+        
         // Note: The response may not be immediately available. Handwriting
         // recognition is an asynchronous operation that can take a variable
         // amount of time depending on the length of the text you want to
@@ -62,6 +61,7 @@
           // "Operation-Location" in the response contains the URI
           // to retrieve the recognized text.
           var operationLocation = jqXHR.getResponseHeader("Operation-Location");
+          console.log(operationLocation)
 
           // Make the second REST API call and get the response.
           $.ajax({
