@@ -20,13 +20,8 @@ router.get(
   }
 );
 
-router.post(
-  "/create",
-  uploadCloud.single("tag-photo"),
-  ensureLogin.ensureLoggedIn("/"),
+router.post("/create",  uploadCloud.single("tag-photo"), ensureLogin.ensureLoggedIn("/"),
   (req, res, next) => {
-    //const tag = req.params.tag;
-    //let tag = "SweetCharmanderClouds";
     const { itemname, itemowner, itemkeeper } = req.body;
     const body = { itemname, itemowner, itemkeeper };
     const giver = req.user; //passport user
@@ -41,7 +36,6 @@ router.post(
         console.log(textTag);
         createNewOath(textTag, body, giver);
       });
-    //.then necesary here to prevent the race condition
   }
 );
 

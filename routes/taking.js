@@ -9,8 +9,10 @@ const hbs = require("handlebars");
 const fs = require("fs");
 const ensureLogin = require('connect-ensure-login')
 
-router.get("/take/:itemID", ensureLogin.ensureLoggedIn('/'), (req, res, next) => {
+router.get("/take/:itemID",uploadCloud.single("tag-photo"), ensureLogin.ensureLoggedIn('/'), (req, res, next) => {
   const itemID = encodeURIComponent(req.params.itemID);
+
+//comprobación del tag
   let item;
   Item.findById(itemID).
     populate("statusID")
