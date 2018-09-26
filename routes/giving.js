@@ -8,7 +8,8 @@ const uploadCloud = require("../config/cloudinary.js");
 const hbs = require("handlebars");
 const fs = require("fs");
 const ensureLogin = require("connect-ensure-login");
-const getTextFromPhoto = require("../AzureOcrAPI/getTextFromPhoto");
+const {getTextFromPhoto} = require("../AzureOcrAPI/getTextFromPhoto");
+const {resolveAfterWait} = require("../AzureOcrAPI/getTextFromPhoto");
 
 router.get(
   "/create",
@@ -33,14 +34,16 @@ router.post(
     const imgPath = req.file.url;
     const imgName = req.file.originalname;
     res.redirect("/items/inventory");
-    
-    let textTag = getTextFromPhoto(imgPath);
-    console.log(textTag);
-    createNewOath(textTag, body, giver);
+    console.log(getTextFromPhoto)
+    getTextFromPhoto(imgPath)
+      .then(url => resolveAfterWait(5000, url))
+      .then(textTag => {
+        console.log(textTag);
+        createNewOath(textTag, body, giver);
+      });
     //.then necesary here to prevent the race condition
   }
 );
-
 
 function createNewOath(tag, body, giver) {
   let promises = [];
@@ -59,22 +62,21 @@ function createNewOath(tag, body, giver) {
       currentHolderID: keeper._id
     });
 
-      newStatus.save()
-        .then(status => {
-          console.log(status);
-          const newItem = new Item({
-            name: body.itemname,
-            tag,
-            statusID: status._id
-          });
-          newItem
-            .save()
-            .then((newItem) => {
-              const htmlGiving = require("../mail/templateGiving");
-              return sendMail(keeper.email, "Do you outh to keep this?", htmlGiving(newItem.name, newItem.tag, newItem._id));
-            })
-            
-        });
+    newStatus.save().then(status => {
+      const newItem = new Item({
+        name: body.itemname,
+        tag,
+        statusID: status._id
+      });
+      newItem.save().then(newItem => {
+        console.log(newItem);
+        const htmlGiving = require("../mail/templateGiving");
+        return sendMail(
+          keeper.email,
+          "Do you outh to keep this?",
+          htmlGiving(newItem.name, newItem.tag, newItem._id)
+        );
+      });
     });
   });
 }

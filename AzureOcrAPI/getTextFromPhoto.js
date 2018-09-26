@@ -10,8 +10,9 @@ const uriBase =
 //&detectOrientation=true
 
 const getTextFromPhoto = imageUrl => {
-  let resText = "SweetCharmanderClouds";
-  axios
+  
+  
+  return axios
     .post(uriBase, '{"url": ' + '"' + imageUrl + '"}', {
       headers: {
         "Content-Type": "application/json",
@@ -21,40 +22,45 @@ const getTextFromPhoto = imageUrl => {
     .then(response => {
       const url = response.headers["operation-location"];
       console.log("Requesting API at " + url);
-      let ms = 5000;
-      function resolveAfterWait() {
-        return new Promise((resolve, reject) => {
-          setTimeout(() => {
-            axios
-              .get(url, {
-                headers: {
-                  "Content-Type": "application/json",
-                  "Ocp-Apim-Subscription-Key": subscriptionKey
-                }
-              })
-              .then(response => {
-                let resJSON = JSON.stringify(response.data, null, 2);
-                let resObj = JSON.parse(resJSON);
-                let resTextArrr = resObj.recognitionResult.lines;
-                resText = resTextArrr.map(e => e.text).join();
-                console.log("The TAG for this object is " + resText);
-                resolve(resText);
-              })
-              .catch(err => {
-                console.log(err);
-                reject;
-              });
-          }, ms);
-        });
-      }
+      return url
+    })
 
-      async function asyncCall() {
-        console.log("Calling API");
-        var result = await resolveAfterWait();
-        console.log("The response is: " + result);
-      }
-      asyncCall();
-    });
 };
 
-module.exports = getTextFromPhoto;
+const resolveAfterWait = (ms, url) => {
+  let resText = "SweetCharmanderClouds";
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      axios
+        .get(url, {
+          headers: {
+            "Content-Type": "application/json",
+            "Ocp-Apim-Subscription-Key": subscriptionKey
+          }
+        })
+        .then(response => {
+          let resJSON = JSON.stringify(response.data, null, 2);
+          let resObj = JSON.parse(resJSON);
+          let resTextArrr = resObj.recognitionResult.lines;
+          resText = resTextArrr.map(e => e.text).join();
+          console.log("The TAG for this object is " + resText);
+          resolve(resText);
+        })
+        .catch(err => {
+          console.log(err);
+          reject;
+        });
+    }, ms);
+  });
+/* 
+async function asyncCall() {
+  console.log("Calling API");
+  var result = await resolveAfterWait();
+  console.log("The response is: " + result);
+}
+asyncCall(); */
+}
+
+
+module.exports = {getTextFromPhoto, resolveAfterWait};
+
