@@ -86,6 +86,9 @@ app.use('/', authRoutes);
 
 const items = require('./routes/giving');
 app.use('/items', items);
+
+const inventory = require('./routes/inventory');
+app.use('/inventory', inventory);
       
 
 //const notifications = require('./routes/notification');

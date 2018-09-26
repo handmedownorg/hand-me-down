@@ -5,7 +5,9 @@ const userSchema = new Schema({
   username: String,
   password: String,
   email: String,
-  karma: Number
+  karma: Number,
+  itemsOwned: Array,
+  itemsKept: Array
 }, {
   timestamps: {
     createdAt: 'created_at',

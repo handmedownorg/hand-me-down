@@ -1,5 +1,3 @@
-
-
 const express = require("express");
 const router = express.Router();
 const Item = require("../models/Item");
@@ -78,9 +76,6 @@ router.post("/taken/:itemID", ensureLogin.ensureLoggedIn('/'), (req, res, next) 
     });
 });
 
-router.get("/inventory", ensureLogin.ensureLoggedIn('/login'), (req, res, next) => {
-  res.render("items/inventory");
-});
 
 function createNewOath(tag, body, giver) {
 

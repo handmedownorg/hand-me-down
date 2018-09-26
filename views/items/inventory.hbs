@@ -1,15 +1,16 @@
 <h2>THIS ARE YOUR ITEMS:</h2>
 
-<h3>WATING TO BE HANDED OVER</h3>
--
--
--
-<h3>YOU ARE TO RECEIVE</h3>
--
--
--
-<h3>ITEMS HISTORIC</h3>
--
--
--
+<h3>Items you own and other people keep:</h3>
+<ul>
+{{#each itemsOwned}}
+<li>{{this}}</li>
+{{/each}}
+</ul>
 
+<h3>Items you keep and you oath to return:</h3>
+
+<ul>
+{{#each itemsKept}}
+<li>{{this}}</li>
+{{/each}}
+</ul>
