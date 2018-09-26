@@ -33,18 +33,12 @@ function processImage() {
     .done(function (data, textStatus, jqXHR) {
       // Show progress.
       $("#responseTextArea").val("Handwritten text submitted. " +
-      "Waiting 10 seconds to retrieve the recognized text.");
-      
-      // Note: The response may not be immediately available. Handwriting
-      // recognition is an asynchronous operation that can take a variable
-      // amount of time depending on the length of the text you want to
-      // recognize. You may need to wait or retry the GET operation.
-      //
-      // Wait ten seconds before making the second REST API call.
+        "Waiting 10 seconds to retrieve the recognized text.");
+
       setTimeout(function () {
-        // "Operation-Location" in the response contains the URI
-        // to retrieve the recognized text.
+
         var operationLocation = jqXHR.getResponseHeader("Operation-Location");
+
 
         // Make the second REST API call and get the response.
         $.ajax({
@@ -62,7 +56,15 @@ function processImage() {
 
           .done(function (data) {
             // Show formatted JSON on webpage.
-            $("#responseTextArea").val(JSON.stringify(data, null, 2));
+            let resJSON = JSON.stringify(data, null, 2);
+            
+            let resObj = JSON.parse(resJSON);
+        
+            let resTextArrr = resObj.recognitionResult.lines;
+            let resText = resTextArrr.map(e=>e.text).join();
+            console.log(resText);
+
+            $("#responseTextArea").val(resText);
           })
 
           .fail(function (jqXHR, textStatus, errorThrown) {
@@ -75,7 +77,7 @@ function processImage() {
                 jQuery.parseJSON(jqXHR.responseText).error.message;
             alert(errorString);
           });
-      }, 10000);
+      }, 5000);
     })
 
     .fail(function (jqXHR, textStatus, errorThrown) {

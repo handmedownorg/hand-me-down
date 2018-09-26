@@ -86,7 +86,9 @@ app.use('/', authRoutes);
 
 const items = require('./routes/giving');
 app.use('/items', items);
-      
+
+const accept = require('./routes/taking');
+app.use('/', accept);
 
 //const notifications = require('./routes/notification');
 //app.use('/', notifications);
