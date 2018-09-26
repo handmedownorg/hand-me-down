@@ -19,13 +19,13 @@ router.post("/create/:tag", uploadCloud.single('tag-photo'), ensureLogin.ensureL
   const { itemname, itemowner, itemkeeper } = req.body;
   const body = { itemname, itemowner, itemkeeper };
   const giver = req.user; //passport user
-  
+
   const imgPath = req.file.url;
   const imgName = req.file.originalname;
 
   createNewOath(tag, body, giver)
   //.then necesary here to prevent the race condition
-    res.redirect("/items/inventory")
+  res.redirect("/items/inventory")
 
 
 
@@ -80,6 +80,9 @@ router.post("/taken/:itemID", ensureLogin.ensureLoggedIn('/'), (req, res, next) 
 function createNewOath(tag, body, giver) {
 
   let promises = [];
+  let taker;
+  let keeper;
+  let newItem;
   promises.push(User.findOne({ username: body.itemowner }));
   promises.push(User.findOne({ username: body.itemkeeper }));
 
@@ -95,7 +98,7 @@ function createNewOath(tag, body, giver) {
 
       newStatus.save()
         .then(status => {
-          const newItem = new Item({
+          newItem = new Item({
             name: body.itemname,
             tag,
             statusID: status._id
@@ -106,6 +109,7 @@ function createNewOath(tag, body, giver) {
               const htmlGiving = require("../mail/templateGiving");
               return sendMail(keeper.email, "Do you outh to keep this?", htmlGiving(newItem.name, newItem.tag, newItem._id));
             })
+            
         });
     });
 }
