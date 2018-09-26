@@ -12,17 +12,18 @@ const ensureLogin = require('connect-ensure-login')
 //this routes are requested after mail confirmation
 
 router.get("/take/:itemID", ensureLogin.ensureLoggedIn('/'), (req, res, next) => {
+ 
   const itemID = encodeURIComponent(req.params.itemID);
-  let item;
   Item.findById(itemID).
     populate("statusID")
-    .then(itemObj => {
-      item = itemObj
+    .then(item => {
       //console.log("item: --->" + item.statusID[0].takerID);
-      return User.findById(item.statusID[0].takerID)
-    })
-    .then(user => {
+    //   return User.findById(item.statusID[0].takerID)
+    // })
+    // .then(user => {
       //console.log(item, user)
+      const user = req.user;
+      console.log("item + user: " + item, user)
       res.render("items/take", { item, user })
     })
     .catch(e => console.log(e))

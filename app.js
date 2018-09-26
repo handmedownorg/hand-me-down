@@ -91,7 +91,7 @@ const inventory = require('./routes/inventory');
 app.use('/inventory', inventory);
       
 const accept = require('./routes/taking');
-app.use('/', accept);
+app.use('/items', accept);
 
 //const notifications = require('./routes/notification');
 //app.use('/', notifications);
