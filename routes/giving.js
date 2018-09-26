@@ -9,6 +9,8 @@ const hbs = require("handlebars");
 const fs = require("fs");
 const ensureLogin = require('connect-ensure-login')
 const getTextFromPhoto = require("../AzureOcrAPI/getTextFromPhoto");
+const htmlGiving = require("../mail/templateGiving");
+
 
 router.get("/create", ensureLogin.ensureLoggedIn('/login'), (req, res, next) => {
   let tag = "SweetCharmanderClouds"; //temporary tag
@@ -22,20 +24,25 @@ router.post("/create", uploadCloud.single('tag-photo'), ensureLogin.ensureLogged
   const body = { itemname, itemowner, itemkeeper };
   const giver = req.user; //passport user
 
-  const imgPath = req.file.url;
+  /* const imgPath = req.file.url;
   const imgName = req.file.originalname;
-  let textTag = getTextFromPhoto(imgPath);
-  console.log(textTag);
-  res.redirect("/items/inventory");
-  return textTag
-  .then(textTag =>{
-    console.log(textTag);
-    createNewOath(tag, body, giver)
-    //.then necesary here to prevent the race condition
-  })
+  let textTag = getTextFromPhoto(imgPath); */
 
-});
+  Item.findOne({ tag })
+    .then(item => {
+      if (item === null) {
+        createNewOath(tag, body, giver);s
+      } else {
+        User.findOne({username: itemkeeper})
+        .then(keeper => {
+          sendMail(keeper.email, "Do you outh to keep this?", htmlGiving(item.name, item.tag, item._id));
+        });
+      }
+      res.redirect("/inventory");
+      //.then necesary here to prevent the race condition with the createNewOath function
+    })
 
+})
 
 function createNewOath(tag, body, giver) {
 
@@ -67,10 +74,9 @@ function createNewOath(tag, body, giver) {
           newItem
             .save()
             .then((newItem) => {
-              const htmlGiving = require("../mail/templateGiving");
-              return sendMail(keeper.email, "Do you outh to keep this?", htmlGiving(newItem.name, newItem.tag, newItem._id));
+              sendMail(keeper.email, "Do you outh to keep this?", htmlGiving(newItem.name, newItem.tag, newItem._id));
             })
-            
+
         });
     });
 }

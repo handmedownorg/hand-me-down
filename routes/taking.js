@@ -9,6 +9,8 @@ const hbs = require("handlebars");
 const fs = require("fs");
 const ensureLogin = require('connect-ensure-login')
 
+//this routes are requested after mail confirmation
+
 router.get("/take/:itemID", ensureLogin.ensureLoggedIn('/'), (req, res, next) => {
   const itemID = encodeURIComponent(req.params.itemID);
   let item;
@@ -26,6 +28,15 @@ router.get("/take/:itemID", ensureLogin.ensureLoggedIn('/'), (req, res, next) =>
     .catch(e => console.log(e))
 });
 
+// TO IMPLEMENT BELOW:
+/* sendMail(taker.email, "Your item " + item.name + " is changing hands!", htmlNotification(item.name, item.tag))
+      
+      User.update({ _id: taker._id }, { $push: { itemsOwned: newItem } })
+        .then(user => console.log(user))
+      
+        User.update({ _id: keeper._id }, { $push: { itemsKept: newItem } })
+        .then(user => console.log(user)) */
+
 router.post("/taken/:itemID", ensureLogin.ensureLoggedIn('/'), (req, res, next) => {  //refactor this using populate
   const itemID = encodeURIComponent(req.params.itemID);
   const newKeeper = req.user;
@@ -36,7 +47,7 @@ router.post("/taken/:itemID", ensureLogin.ensureLoggedIn('/'), (req, res, next) 
       itemVar = item;
       return Status.findById(item.statusID);
       const htmlNotification = require('../mail/templateNotification')
-      //sendMail(taker.email, "Your item " + item.name + " is changing hands!", htmlNotification(item.name, item.tag))
+      
     })
     .then(status => {
       console.log("The keeper was " + status.currentHolderID);
