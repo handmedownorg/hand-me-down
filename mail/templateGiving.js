@@ -24,4 +24,4 @@ const htmlGiving =  (name, tag, id) => `<!DOCTYPE html>
 </body>
 </html>`
 
-module.exports = html;
+module.exports = htmlGiving;

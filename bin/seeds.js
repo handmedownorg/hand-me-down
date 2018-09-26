@@ -30,13 +30,17 @@ let users = [
     username: "Laura",
     password: bcrypt.hashSync("1234", bcrypt.genSaltSync(bcryptSalt)),
     email: "handmedownapp@gmail.com",
-    karma: 0
+    karma: 0,
+    itemsOwned: ["patata"],
+    itemsKept: ["coliflor"]
   },
   {
     username: "Raul",
     password: bcrypt.hashSync("1234", bcrypt.genSaltSync(bcryptSalt)),
     email: "handmedownapp@gmail.com",
-    karma: 100
+    karma: 100,
+    itemsOwned: ["patata"],
+    itemsKept: ["coliflor"]
   }
 ];
 

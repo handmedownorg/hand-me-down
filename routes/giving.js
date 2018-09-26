@@ -41,16 +41,12 @@ router.post(
   }
 );
 
-router.get(
-  "/inventory",
-  ensureLogin.ensureLoggedIn("/login"),
-  (req, res, next) => {
-    res.render("items/inventory");
-  }
-);
 
 function createNewOath(tag, body, giver) {
   let promises = [];
+  let taker;
+  let keeper;
+  let newItem;
   promises.push(User.findOne({ username: body.itemowner }));
   promises.push(User.findOne({ username: body.itemkeeper }));
 
@@ -63,21 +59,22 @@ function createNewOath(tag, body, giver) {
       currentHolderID: keeper._id
     });
 
-    newStatus.save().then(status => {
-      console.log(status);
-      const newItem = new Item({
-        name: body.itemname,
-        tag,
-        statusID: status._id
-      });
-      newItem.save().then(newItem => {
-        const htmlGiving = require("../mail/templateGiving");
-        return sendMail(
-          keeper.email,
-          "Do you outh to keep this?",
-          htmlGiving(newItem.name, newItem.tag, newItem._id)
-        );
-      });
+      newStatus.save()
+        .then(status => {
+          console.log(status);
+          const newItem = new Item({
+            name: body.itemname,
+            tag,
+            statusID: status._id
+          });
+          newItem
+            .save()
+            .then((newItem) => {
+              const htmlGiving = require("../mail/templateGiving");
+              return sendMail(keeper.email, "Do you outh to keep this?", htmlGiving(newItem.name, newItem.tag, newItem._id));
+            })
+            
+        });
     });
   });
 }
