@@ -12,11 +12,11 @@ const getTextFromPhoto = require("../AzureOcrAPI/getTextFromPhoto");
 
 router.get("/create", ensureLogin.ensureLoggedIn('/login'), (req, res, next) => {
   let tag = "SweetCharmanderClouds"; //temporary tag
-  res.render("items/give", { tag });
+  res.render("items/give");
 });
 
-router.post("/create/:tag", uploadCloud.single('tag-photo'), ensureLogin.ensureLoggedIn('/'), (req, res, next) => {
-  const tag = req.params.tag;
+router.post("/create", uploadCloud.single('tag-photo'), ensureLogin.ensureLoggedIn('/'), (req, res, next) => {
+  //const tag = req.params.tag;
   const { itemname, itemowner, itemkeeper } = req.body;
   const body = { itemname, itemowner, itemkeeper };
   const giver = req.user; //passport user
@@ -25,10 +25,14 @@ router.post("/create/:tag", uploadCloud.single('tag-photo'), ensureLogin.ensureL
   const imgName = req.file.originalname;
   let textTag = getTextFromPhoto(imgPath);
   console.log(textTag);
+  res.redirect("/items/inventory");
+  return textTag
+  .then(textTag =>{
+    console.log(textTag);
+    createNewOath(textTag, body, giver)
+    //.then necesary here to prevent the race condition
+  })
 
-  createNewOath(tag, body, giver)
-  //.then necesary here to prevent the race condition
-  res.redirect("/items/inventory")
 });
 
 router.get("/inventory", ensureLogin.ensureLoggedIn('/login'), (req, res, next) => {
@@ -53,6 +57,7 @@ function createNewOath(tag, body, giver) {
 
       newStatus.save()
         .then(status => {
+          console.log(status);
           const newItem = new Item({
             name: body.itemname,
             tag,

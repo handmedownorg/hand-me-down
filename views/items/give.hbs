@@ -21,13 +21,12 @@
       <div id="itemID"></div>
       <p>Write this tag and stick the post-it somewhere on the item.</p>
     </div>
-    <br>
-    {{#if message }}
-    <div class="error-message">{{ message }}</div>
-    {{/if}}
-    <br><br>
     <button type="submit" value="SAVE">Hand down this item</button>
   </form>
+  {{#if message }}
+  <div class="error-message">{{ message }}</div>
+  {{/if}}
+
 </div>
 
 <a href="/about">How this works?</a>
