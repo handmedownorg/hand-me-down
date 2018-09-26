@@ -49,9 +49,9 @@ const getTextFromPhoto = imageUrl => {
       }
 
       async function asyncCall() {
-        console.log("calling");
+        console.log("Calling API");
         var result = await resolveAfterWait();
-        console.log(result);
+        console.log("The response is: " + result);
       }
       asyncCall();
     });
