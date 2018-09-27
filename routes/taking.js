@@ -9,8 +9,6 @@ const ensureLogin = require("connect-ensure-login");
 const { getTextFromPhoto } = require("../AzureOcrAPI/getTextFromPhoto");
 const { resolveAfterWait } = require("../AzureOcrAPI/getTextFromPhoto");
 
-//this routes are requested after mail confirmation
-
 router.get(
   "/take/:itemID",
   ensureLogin.ensureLoggedIn("/"),
@@ -20,7 +18,6 @@ router.get(
       .populate("statusID")
       .then(item => {
         const user = req.user;
-        //console.log("item + user: " + item, user)
         res.render("items/take", { item, user });
       })
       .catch(e => console.log(e));
@@ -38,9 +35,6 @@ router.post(
     let tagFromAPI;
     let itemVar;
 
-  //change the item status
-  //the array of objects of the new keeper and the old keeper is updated
-
     getTextFromPhoto(imgPath)
       .then(url => resolveAfterWait(5000, url))
       .then(textTag => {
@@ -56,8 +50,8 @@ router.post(
               return Status.findById(item.statusID);
             } else { //if IT'S NOT the same tag
               console.log("After verification the don't tags match => IT'S NOT THE SAME BOOK");
-
-              return Status.findById(item.statusID);
+              res.render("items/wrong");
+              return undefined;
             }
           })
           .then(status => {
@@ -71,7 +65,13 @@ router.post(
           .then(status => {
             console.log("Now the keeper is " + status.currentHolderID);
             itemVar.name = "otra cosa";
-            User.update({ _id: status.newKeeper}, { $push: { itemsKept: itemVar } }).then(()=>console.log("exito push keeper"));
+            //check if the new keeper is the owner (final taker)
+            if(status.currentHolderID == status.takerID){
+              console.log("Congratulations you received your item");
+            } else{
+              console.log("This item doesn't belong to you, please give it to its owner");
+            }
+            User.update({ _id: status.currentHolderID}, { $push: { itemsKept: itemVar } }).then(()=>console.log("exito push keeper"));
             res.render("items/confirmation");
             sendMail(taker.email, "Your item " + item.name + " is changing hands!", htmlNotification(item.name, item.tag))
             //sendMail(taker.email,`${keeper.username} is now keeping your ${newItem.name}`, htmlGiving(newItem.name, newItem.tag, newItem._id));

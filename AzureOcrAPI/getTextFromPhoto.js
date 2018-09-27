@@ -1,17 +1,12 @@
 "use strict";
 var axios = require("axios");
-const request = require("request");
 require("dotenv").config({ path: ".private.env" });
 
 const subscriptionKey = process.env.AZUREKEY;
 const uriBase =
   "https://westcentralus.api.cognitive.microsoft.com/vision/v2.0/recognizeText?mode=Handwritten";
-//&language=unk //"en"
-//&detectOrientation=true
 
 const getTextFromPhoto = imageUrl => {
-  
-  
   return axios
     .post(uriBase, '{"url": ' + '"' + imageUrl + '"}', {
       headers: {
@@ -24,7 +19,6 @@ const getTextFromPhoto = imageUrl => {
       console.log("Requesting API at " + url);
       return url
     })
-
 };
 
 const resolveAfterWait = (ms, url) => {

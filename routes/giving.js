@@ -14,7 +14,6 @@ router.get(
   "/create",
   ensureLogin.ensureLoggedIn("/login"),
   (req, res, next) => {
-    let tag = "SweetCharmanderClouds"; //temporary tag
     res.render("items/give");
   }
 );
