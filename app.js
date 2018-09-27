@@ -78,6 +78,12 @@ app.use(
 app.use(flash());
 require("./passport")(app);
 
+app.use((req,res,next) => {
+  app.locals.title = "Hand-me-down"
+  app.locals.user = req.user;
+  next();
+})
+
 const index = require("./routes/index");
 app.use("/", index);
 
@@ -92,8 +98,5 @@ app.use('/inventory', inventory);
       
 const accept = require('./routes/taking');
 app.use('/items', accept);
-
-//const notifications = require('./routes/notification');
-//app.use('/', notifications);
       
 module.exports = app;
