@@ -9,8 +9,6 @@ const ensureLogin = require("connect-ensure-login");
 const { getTextFromPhoto } = require("../AzureOcrAPI/getTextFromPhoto");
 const { resolveAfterWait } = require("../AzureOcrAPI/getTextFromPhoto");
 
-//this routes are requested after mail confirmation
-
 router.get(
   "/take/:itemID",
   ensureLogin.ensureLoggedIn("/"),
@@ -20,7 +18,6 @@ router.get(
       .populate("statusID")
       .then(item => {
         const user = req.user;
-        //console.log("item + user: " + item, user)
         res.render("items/take", { item, user });
       })
       .catch(e => console.log(e));
@@ -37,9 +34,7 @@ router.post(
     const imgPath = req.file.url;
     let tagFromAPI;
     let itemVar;
-
-  //change the item status
-  //the array of objects of the new keeper and the old keeper is updated
+    let isowner;
 
     getTextFromPhoto(imgPath)
       .then(url => resolveAfterWait(5000, url))
@@ -47,17 +42,22 @@ router.post(
         //console.log("The TAG goes through create /POST " + textTag);
         tagFromAPI = textTag;
 
-        //HERE IT STARTS THE ITEM UPDATE
         Item.findById(itemID)
           .then(item => {
             itemVar = item;
-            if (item.tag == tagFromAPI) { //if IT'S the same tag
-              //console.log("After verification the tags match => IT'S THE SAME BOOK");
+            if (item.tag == tagFromAPI) {
+              //if IT'S the same tag
+              console.log(
+                "After verification the tags match => IT'S THE SAME BOOK"
+              );
               return Status.findById(item.statusID);
-            } else { //if IT'S NOT the same tag
-              //console.log("After verification the don't tags match => IT'S NOT THE SAME BOOK");
-
-              return Status.findById(item.statusID);
+            } else {
+              //if IT'S NOT the same tag
+              console.log(
+                "After verification the don't tags match => IT'S NOT THE SAME BOOK"
+              );
+              res.render("items/wrong");
+              return undefined;
             }
           })
           .then(status => {
@@ -71,6 +71,15 @@ router.post(
           })
           .then(status => { 
             console.log("Now the keeper is " + status.currentHolderID);
+            if (status.currentHolderID == status.takerID) {
+              console.log("Congratulations you received your item");
+              isowner = "This is yours!";
+            } else {
+              console.log(
+                "This item doesn't belong to you, please give it to its owner"
+              );
+              isowner = "You are a keeper";
+            }
             User.findByIdAndUpdate(req.user._id, { $push: { itemsKept: itemVar } }, {new:true})
             .then(user => console.log("resuelve push keeper" + status.currentHolderID));
             res.render("items/confirmation");
@@ -82,5 +91,9 @@ router.post(
       });
   }
 );
+
+router.get("/receive", (req, res, next) => {
+  res.redirect("/inventory");
+});
 
 module.exports = router;

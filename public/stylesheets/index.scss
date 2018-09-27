@@ -1,8 +1,58 @@
 @import "variables.sass"; 
 
+*{
+  padding: 0;
+  margin: 0;
+}
+
 body {
-  color: $primary-color;
+  background-color: $primary-color;
+  color: $secondary-color;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  border: 4px solid $primary-color;
+}
+
+a {
+  color: $primary-color;
+  text-decoration: none;
+}
+
+#main-wrapper{
+  background-color: $secondary-color;
+  align-self: center;
+  color: $primary-color;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  height: 70vh;
+  padding: 20px;
+}
+
+button{
+  color: secondary-color;
+  background-color: $primary-color;
+}
+button a {
+  color: secondary-color;
+  padding: 20px;
+  text-decoration: none;
+}
+
+footer{
+  color: $secondary-color;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  align-self: flex-end;
+}
+footer a{
+  padding: 20px;
+  color: $secondary-color;
+  text-decoration: none;
 }
 
 .form-wrapper{
@@ -21,13 +71,11 @@ body {
 .input-div{
   padding: 10px;
 }
-button{
-  color: $primary-color;
-  background-color: $secondary-color;
-}
 
 
-.main-logo {
+
+
+/* .main-logo {
   position: absolute;
   top: 100px;
 }
@@ -49,4 +97,4 @@ button{
   top: 70vh;
   display: block;
   padding: 10px;
-}
+} */
