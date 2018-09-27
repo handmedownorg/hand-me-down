@@ -62,6 +62,7 @@ router.post(
           })
           .then(status => {
             console.log("The keeper was " + status.currentHolderID);
+            
             User.findByIdAndUpdate(status.currentHolderID, { $pull: { itemsKept: itemVar } }, {new:true})
             .then(user => console.log("resuelve pull keeper" + status.currentHolderID))
             return Status.findByIdAndUpdate(
