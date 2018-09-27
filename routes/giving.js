@@ -5,8 +5,6 @@ const Status = require("../models/Status");
 const User = require("../models/User");
 const sendMail = require("../mail/sendMail");
 const uploadCloud = require("../config/cloudinary.js");
-const hbs = require("handlebars");
-const fs = require("fs");
 const ensureLogin = require("connect-ensure-login");
 const { getTextFromPhoto } = require("../AzureOcrAPI/getTextFromPhoto");
 const { resolveAfterWait } = require("../AzureOcrAPI/getTextFromPhoto");
@@ -80,8 +78,14 @@ function createNewOath(tag, body, giver) {
         statusID: status._id
       });
       newItem.save().then(newItem => {
-        console.log(newItem);
-        sendMail(keeper.email,`Do you outh to keep this ${newItem.name}?`, htmlGiving(newItem.name, newItem.tag, newItem._id));
+        User.update({ _id: giver._id }, { $push: { itemsKept: newItem } }).then(
+          () => console.log("exito keeper1")
+        );
+        sendMail(
+          keeper.email,
+          "Do you outh to keep this?",
+          htmlGiving(newItem.name, newItem.tag, newItem._id)
+        );
       });
     });
   });

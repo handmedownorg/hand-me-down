@@ -36,6 +36,10 @@ router.post(
     const newKeeper = req.user;
     const imgPath = req.file.url;
     let tagFromAPI;
+    let itemVar;
+
+  //change the item status
+  //the array of objects of the new keeper and the old keeper is updated
 
     getTextFromPhoto(imgPath)
       .then(url => resolveAfterWait(5000, url))
@@ -46,10 +50,10 @@ router.post(
         //HERE IT STARTS THE ITEM UPDATE
         Item.findById(itemID)
           .then(item => {
+            itemVar = item;
             if (item.tag == tagFromAPI) { //if IT'S the same tag
               console.log("After verification the tags match => IT'S THE SAME BOOK");
               return Status.findById(item.statusID);
-
             } else { //if IT'S NOT the same tag
               console.log("After verification the don't tags match => IT'S NOT THE SAME BOOK");
 
@@ -58,6 +62,7 @@ router.post(
           })
           .then(status => {
             console.log("The keeper was " + status.currentHolderID);
+            User.update({ _id: status.currentHolderID }, { $pull: { itemsOwned: itemVar } }).then(()=>console.log("exito pull keeper"))
             return Status.findByIdAndUpdate(
               { _id: status._id },
               { currentHolderID: newKeeper._id }
@@ -65,6 +70,8 @@ router.post(
           })
           .then(status => {
             console.log("Now the keeper is " + status.currentHolderID);
+            itemVar.name = "otra cosa";
+            User.update({ _id: status.newKeeper}, { $push: { itemsKept: itemVar } }).then(()=>console.log("exito push keeper"));
             res.render("items/confirmation");
             sendMail(taker.email, "Your item " + item.name + " is changing hands!", htmlNotification(item.name, item.tag))
             //sendMail(taker.email,`${keeper.username} is now keeping your ${newItem.name}`, htmlGiving(newItem.name, newItem.tag, newItem._id));
