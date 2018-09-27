@@ -39,7 +39,7 @@ router.post("/create", uploadCloud.single("tag-photo"), ensureLogin.ensureLogged
         Item.findOne({ textTag })
           .then(item => {
             if (item === null) {
-              createNewOath(textTag, body, giver); s
+              createNewOath(textTag, body, giver);
             } else {
               User.findOne({ username: itemkeeper })
                 .then(keeper => {
@@ -80,7 +80,7 @@ function createNewOath(tag, body, giver) {
         newItem
           .save()
           .then((newItem) => {
-            console.log(newItem)
+            User.update({ _id: taker._id }, { $push: { itemsOwned: newItem } })        
             sendMail(keeper.email, "Do you outh to keep this?", htmlGiving(newItem.name, newItem.tag, newItem._id));
           })
 

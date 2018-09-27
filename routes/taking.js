@@ -27,25 +27,21 @@ router.get("/take/:itemID", ensureLogin.ensureLoggedIn('/'), (req, res, next) =>
 // TO IMPLEMENT BELOW:
 /* sendMail(taker.email, "Your item " + item.name + " is changing hands!", htmlNotification(item.name, item.tag))
 const htmlNotification = require('../mail/templateNotification')
+*/
 
-       */
-
-router.post("/taken/:itemID", ensureLogin.ensureLoggedIn('/'), (req, res, next) => { 
+router.post("/taken/:itemID", ensureLogin.ensureLoggedIn('/'), (req, res, next) => {
   const itemID = encodeURIComponent(req.params.itemID);
   const newKeeper = req.user;
   let itemVar;
-  
-  User.update({ _id: taker._id }, { $push: { itemsOwned: newItem } })
-    .then(user => console.log(user))
 
-  User.update({ _id: keeper._id }, { $push: { itemsKept: newItem } })
-    .then(user => console.log(user))
+  //change the item status
+  //the array of objects of the new keeper and the old keeper is updated
 
   Item.findById(itemID)
     .then(item => {
       itemVar = item;
-      return Status.findById(item.statusID);
-
+      User.update({ _id: newKeeper._id }, { $push: { itemsKept: item } }).then(()=>console.log("exito"))
+        return Status.findById(item.statusID);
     })
     .then(status => {
       console.log("The keeper was " + status.currentHolderID);
