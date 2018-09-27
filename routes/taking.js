@@ -81,6 +81,7 @@ router.post(
               );
               isowner = "You are a keeper";
             }
+            
             User.findByIdAndUpdate(req.user._id, { $push: { itemsKept: itemVar } }, {new:true})
             .then(user => console.log("resuelve push keeper" + status.currentHolderID));
             res.render("items/confirmation");
