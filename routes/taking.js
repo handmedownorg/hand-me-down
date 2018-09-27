@@ -44,7 +44,7 @@ router.post(
     getTextFromPhoto(imgPath)
       .then(url => resolveAfterWait(5000, url))
       .then(textTag => {
-        console.log("The TAG goes through create /POST " + textTag);
+        //console.log("The TAG goes through create /POST " + textTag);
         tagFromAPI = textTag;
 
         //HERE IT STARTS THE ITEM UPDATE
@@ -52,29 +52,29 @@ router.post(
           .then(item => {
             itemVar = item;
             if (item.tag == tagFromAPI) { //if IT'S the same tag
-              console.log("After verification the tags match => IT'S THE SAME BOOK");
+              //console.log("After verification the tags match => IT'S THE SAME BOOK");
               return Status.findById(item.statusID);
             } else { //if IT'S NOT the same tag
-              console.log("After verification the don't tags match => IT'S NOT THE SAME BOOK");
+              //console.log("After verification the don't tags match => IT'S NOT THE SAME BOOK");
 
               return Status.findById(item.statusID);
             }
           })
           .then(status => {
             console.log("The keeper was " + status.currentHolderID);
-            User.update({ _id: status.currentHolderID }, { $pull: { itemsOwned: itemVar } }).then(()=>console.log("exito pull keeper"))
+            User.findByIdAndUpdate(status.currentHolderID, { $pull: { itemsKept: itemVar } }, {new:true})
+            .then(user => console.log("resuelve pull keeper" + status.currentHolderID))
             return Status.findByIdAndUpdate(
               { _id: status._id },
               { currentHolderID: newKeeper._id }
             );
           })
-          .then(status => {
+          .then(status => { 
             console.log("Now the keeper is " + status.currentHolderID);
-            itemVar.name = "otra cosa";
-            User.update({ _id: status.newKeeper}, { $push: { itemsKept: itemVar } }).then(()=>console.log("exito push keeper"));
+            User.findByIdAndUpdate(req.user._id, { $push: { itemsKept: itemVar } }, {new:true})
+            .then(user => console.log("resuelve push keeper" + status.currentHolderID));
             res.render("items/confirmation");
             sendMail(taker.email, "Your item " + item.name + " is changing hands!", htmlNotification(item.name, item.tag))
-            //sendMail(taker.email,`${keeper.username} is now keeping your ${newItem.name}`, htmlGiving(newItem.name, newItem.tag, newItem._id));
           })
           .catch(err => {
             res.render("error", { message: "Keeper not found" });

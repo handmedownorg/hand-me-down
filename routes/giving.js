@@ -14,7 +14,6 @@ router.get(
   "/create",
   ensureLogin.ensureLoggedIn("/login"),
   (req, res, next) => {
-    let tag = "SweetCharmanderClouds"; //temporary tag
     res.render("items/give");
   }
 );
@@ -35,7 +34,7 @@ router.post(
     getTextFromPhoto(imgPath)
       .then(url => resolveAfterWait(5000, url))
       .then(textTag => {
-        console.log("The TAG goes through create /POST " + textTag);
+        //console.log("The TAG goes through create /POST " + textTag);
         Item.findOne({ textTag }).then(item => {
           if (item === null) {
             createNewOath(textTag, body, giver);
@@ -71,16 +70,15 @@ function createNewOath(tag, body, giver) {
     });
 
     newStatus.save().then(status => {
-      console.log(status);
       const newItem = new Item({
         name: body.itemname,
         tag,
         statusID: status._id
       });
       newItem.save().then(newItem => {
-        User.update({ _id: giver._id }, { $push: { itemsKept: newItem } }).then(
-          () => console.log("exito keeper1")
-        );
+        User.findByIdAndUpdate(giver._id , { $push: { itemsKept: newItem } }, {new:true})
+        User.findByIdAndUpdate(taker._id, { $push: { itemsOwned: newItem } }, {new:true})
+
         sendMail(
           keeper.email,
           "Do you outh to keep this?",
