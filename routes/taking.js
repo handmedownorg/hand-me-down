@@ -55,7 +55,7 @@ router.post("/taken/:itemID", ensureLogin.ensureLoggedIn('/'), (req, res, next) 
     .then(status => {
       console.log("Now the keeper is " + status.currentHolderID);
       itemVar.name = "otra cosa"
-      User.update({ _id: status.currentHolderID }, { $push: { itemsKept: itemVar } }).then(()=>console.log("exito push keeper"))
+      User.update({ _id: status.newKeeper }, { $push: { itemsKept: itemVar } }).then(()=>console.log("exito push keeper"))
 
       res.render("items/confirmation");
     })
