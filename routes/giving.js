@@ -70,14 +70,17 @@ function createNewOath(tag, body, giver) {
     });
 
     newStatus.save().then(status => {
-      const newItem = new Item({
+        newItem = new Item({
         name: body.itemname,
         tag,
         statusID: status._id
       });
       newItem.save().then(newItem => {
+        console.log("entra")
         User.findByIdAndUpdate(giver._id , { $push: { itemsKept: newItem } }, {new:true})
+        .then(console.log)
         User.findByIdAndUpdate(taker._id, { $push: { itemsOwned: newItem } }, {new:true})
+        .then(console.log)
 
         sendMail(
           keeper.email,
