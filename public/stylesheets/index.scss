@@ -12,23 +12,47 @@ body {
   border: 4px solid $primary-color;
 }
 
+a {
+  color: $primary-color;
+  text-decoration: none;
+}
+
 #main-wrapper{
   background-color: $secondary-color;
+  align-self: center;
   color: $primary-color;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-content: center;
   align-items: center;
-  height: 80vh;
+  height: 70vh;
+  padding: 20px;
+}
+
+button{
+  color: secondary-color;
+  background-color: $primary-color;
+}
+button a {
+  color: secondary-color;
+  padding: 20px;
+  text-decoration: none;
 }
 
 footer{
+  color: $secondary-color;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-content: center;
   align-items: center;
+  align-self: flex-end;
+}
+footer a{
+  padding: 20px;
+  color: $secondary-color;
+  text-decoration: none;
 }
 
 .form-wrapper{
@@ -47,10 +71,8 @@ footer{
 .input-div{
   padding: 10px;
 }
-button{
-  color: $primary-color;
-  background-color: $secondary-color;
-}
+
+
 
 
 /* .main-logo {

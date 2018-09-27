@@ -88,8 +88,8 @@
 
 .menu a:hover {
   border-left: 5px solid #e57373;
-  color: #e57373;
-  background: #222; }
+  color: #fff;
+  background: #3162FF; }
 
 .clear-menu {
   /* clears the space for the hamburguer menu */

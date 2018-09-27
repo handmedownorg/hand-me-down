@@ -10,22 +10,44 @@ body {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   border: 4px solid #3162FF; }
 
+a {
+  color: #3162FF;
+  text-decoration: none; }
+
 #main-wrapper {
   background-color: #fff;
+  align-self: center;
   color: #3162FF;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-content: center;
   align-items: center;
-  height: 80vh; }
+  height: 70vh;
+  padding: 20px; }
+
+button {
+  color: secondary-color;
+  background-color: #3162FF; }
+
+button a {
+  color: secondary-color;
+  padding: 20px;
+  text-decoration: none; }
 
 footer {
+  color: #fff;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-content: center;
-  align-items: center; }
+  align-items: center;
+  align-self: flex-end; }
+
+footer a {
+  padding: 20px;
+  color: #fff;
+  text-decoration: none; }
 
 .form-wrapper {
   display: flex;
@@ -42,10 +64,6 @@ footer {
 
 .input-div {
   padding: 10px; }
-
-button {
-  color: #3162FF;
-  background-color: #fff; }
 
 /* .main-logo {
   position: absolute;

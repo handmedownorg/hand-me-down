@@ -79,8 +79,9 @@
   }
     .menu a:hover {
       border-left: 5px solid #e57373;
-      color: #e57373;
-      background: #222; }
+      color: $secondary-color;
+      background: $primary-color; 
+    }
 
 .clear-menu { /* clears the space for the hamburguer menu */
   display: block;
