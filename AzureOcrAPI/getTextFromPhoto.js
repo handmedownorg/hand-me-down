@@ -41,10 +41,11 @@ const resolveAfterWait = (ms, url) => {
         .then(response => {
           let resJSON = JSON.stringify(response.data, null, 2);
           let resObj = JSON.parse(resJSON);
-          let resTextArrr = resObj.recognitionResult.lines;
-          resText = resTextArrr.map(e => e.text).join();
-          console.log("The TAG for this object is " + resText);
-          resolve(resText);
+          let resTextArr = resObj.recognitionResult.lines;
+          resText = resTextArr.map(e => e.text).join();
+          let compText = resText.replace(/[^A-Z0-9]/ig, "");
+          console.log("The TAG result for this object is " + compText);
+          resolve(compText);
         })
         .catch(err => {
           console.log(err);
@@ -52,13 +53,6 @@ const resolveAfterWait = (ms, url) => {
         });
     }, ms);
   });
-/* 
-async function asyncCall() {
-  console.log("Calling API");
-  var result = await resolveAfterWait();
-  console.log("The response is: " + result);
-}
-asyncCall(); */
 }
 
 

@@ -5,13 +5,10 @@ const Status = require("../models/Status");
 const User = require("../models/User");
 const sendMail = require("../mail/sendMail");
 const uploadCloud = require("../config/cloudinary.js");
-const hbs = require("handlebars");
-const fs = require("fs");
 const ensureLogin = require("connect-ensure-login");
 const { getTextFromPhoto } = require("../AzureOcrAPI/getTextFromPhoto");
 const { resolveAfterWait } = require("../AzureOcrAPI/getTextFromPhoto");
 const htmlGiving = require("../mail/templateGiving");
-
 
 router.get(
   "/create",
@@ -22,7 +19,10 @@ router.get(
   }
 );
 
-router.post("/create", uploadCloud.single("tag-photo"), ensureLogin.ensureLoggedIn("/"),
+router.post(
+  "/create",
+  uploadCloud.single("tag-photo"),
+  ensureLogin.ensureLoggedIn("/"),
   (req, res, next) => {
     const { itemname, itemowner, itemkeeper } = req.body;
     const body = { itemname, itemowner, itemkeeper };
@@ -31,23 +31,24 @@ router.post("/create", uploadCloud.single("tag-photo"), ensureLogin.ensureLogged
     const imgPath = req.file.url;
     const imgName = req.file.originalname;
     res.redirect("/inventory"); //wating page------
-    console.log(getTextFromPhoto)
+
     getTextFromPhoto(imgPath)
       .then(url => resolveAfterWait(5000, url))
       .then(textTag => {
-        console.log(textTag);
-        Item.findOne({ textTag })
-          .then(item => {
-            if (item === null) {
-              createNewOath(textTag, body, giver);
-            } else {
-              User.findOne({ username: itemkeeper })
-                .then(keeper => {
-                  sendMail(keeper.email, "Do you outh to keep this?", htmlGiving(item.name, item.tag, item._id));
-                });
-            }
-          })
-
+        console.log("The TAG goes through create /POST " + textTag);
+        Item.findOne({ textTag }).then(item => {
+          if (item === null) {
+            createNewOath(textTag, body, giver);
+          } else {
+            User.findOne({ username: itemkeeper }).then(keeper => {
+              sendMail(
+                keeper.email,
+                "Do you outh to keep this?",
+                htmlGiving(item.name, item.tag, item._id)
+              );
+            });
+          }
+        });
       });
   }
 );
@@ -69,24 +70,25 @@ function createNewOath(tag, body, giver) {
       currentHolderID: giver._id
     });
 
-    newStatus.save()
-      .then(status => {
-        console.log(status);
-        const newItem = new Item({
-          name: body.itemname,
-          tag,
-          statusID: status._id
-        });
-        newItem
-          .save()
-          .then((newItem) => {
-            User.update({ _id: giver._id }, { $push: { itemsKept: newItem } }).then(() => console.log("exito keeper1"))
-            sendMail(keeper.email, "Do you outh to keep this?", htmlGiving(newItem.name, newItem.tag, newItem._id));
-          })
-
+    newStatus.save().then(status => {
+      console.log(status);
+      const newItem = new Item({
+        name: body.itemname,
+        tag,
+        statusID: status._id
       });
+      newItem.save().then(newItem => {
+        User.update({ _id: giver._id }, { $push: { itemsKept: newItem } }).then(
+          () => console.log("exito keeper1")
+        );
+        sendMail(
+          keeper.email,
+          "Do you outh to keep this?",
+          htmlGiving(newItem.name, newItem.tag, newItem._id)
+        );
+      });
+    });
   });
 }
-
 
 module.exports = router;

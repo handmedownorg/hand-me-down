@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Hand-me-down</title>
+  <title>{{title}}</title>
   <link rel="stylesheet" href="/stylesheets/index.css">
   <link rel="stylesheet" href="/stylesheets/hamburguer-menu.css" />
 
@@ -13,26 +13,31 @@
 
 <body>
 
-<div class="entire-menu">
-  <input type="checkbox" id="change-hamburguer" />
-  <a class="hamburguer" href="#">
-    <span></span>
-    <label for="change-hamburguer"></label>
-  </a>
-  <div class="menu">
-    <a href="/">Home</a>
-    <a href="/inventory">Your Items</a>
-    <a href="/login">Log In</a>
-    <a href="/signup">Sign Up</a>
-    <a href="/about">About</a>
-    <p><a href="/logout">Log Out</a></p>
+  <div class="entire-menu">
+    <input type="checkbox" id="change-hamburguer" />
+    <a class="hamburguer" href="#">
+      <span></span>
+      <label for="change-hamburguer"></label>
+    </a>
+    {{#if user.username}}
+    <span style="color: white; display:inline-block">Hi {{user.username}} your are logged in</span>
+    {{/if}}
+    <div class="menu">
+      <a href="/">Home</a>
+      <a href="/inventory">Your Items</a>
+      <a href="/login">Log In</a>
+      <a href="/signup">Sign Up</a>
+      <a href="/about">About</a>
+      <p><a href="/logout">Log Out</a></p>
+    </div>
   </div>
-</div>
 
-<div class="clear-menu"></div>
+  <div class="clear-menu"></div>
 
-{{{body}}}
-
+  {{{body}}}
+<footer>
+  <a href="/about">How this works?</a>
+</footer>
   <script src="/javascripts/script.js"></script>
 </body>
 
