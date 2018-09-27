@@ -32,7 +32,7 @@ router.post(
     res.redirect("/inventory");
 
     getTextFromPhoto(imgPath)
-      .then(url => resolveAfterWait(5000, url))
+      .then(url => resolveAfterWait(10000, url))
       .then(textTag => {
         console.log("The TAG goes through create /POST " + textTag);
         Item.findOne({ textTag }).then(item => {
@@ -70,7 +70,7 @@ function createNewOath(tag, body, giver) {
     });
 
     newStatus.save().then(status => {
-      console.log(status);
+      //console.log(status);
       const newItem = new Item({
         name: body.itemname,
         tag,

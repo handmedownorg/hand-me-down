@@ -75,6 +75,7 @@ router.post(
             console.log("Now the keeper is " + status.currentHolderID);
             itemVar.name = "otra cosa";
             //check if the new keeper is the owner (final taker)
+            //-----------------------------------------------------
             if (status.currentHolderID == status.takerID) {
               console.log("Congratulations you received your item");
               isowner = "This is yours!";
