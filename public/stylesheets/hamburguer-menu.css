@@ -1,14 +1,13 @@
-/*  #54CCF2 */
 /*  #F2F1E2 */
 .entire-menu {
   position: absolute;
   padding: 20px;
-  width: 100%;
+  width: 90vw;
   z-index: 2;
-  background-color: #3162FF; }
+  background-color: #82BEFA; }
 
 .hamburguer {
-  width: 20px;
+  width: 30px;
   height: 20px;
   display: block;
   position: relative; }
@@ -38,7 +37,7 @@
   height: 100%;
   background: none;
   cursor: pointer;
-  z-index: 1000; }
+  z-index: 10; }
 
 .hamburguer span {
   top: 8px; }
@@ -69,13 +68,12 @@
 .menu {
   max-height: 0;
   height: auto;
-  background: #3162FF;
+  background: #82BEFA;
   -webkit-transition: all 300ms ease-in-out;
   transition: all 300ms ease-in-out;
   overflow: hidden;
-  font-family: sans-serif;
   font-weight: 400;
-  font-size: 13px;
+  font-size: 15px;
   width: 50%; }
 
 .menu a {
@@ -84,17 +82,21 @@
   padding: 5px 10px;
   display: block;
   text-transform: uppercase;
-  border-left: 5px solid #3162FF; }
+  border-left: 5px solid #82BEFA; }
 
 .menu a:hover {
-  border-left: 5px solid #e57373;
+  border-left: 5px solid white;
   color: #fff;
-  background: #3162FF; }
+  background: #82BEFA; }
 
 .clear-menu {
   /* clears the space for the hamburguer menu */
   display: block;
-  height: 80px; }
+  height: 60px; }
+
+.widthFixed {
+  position: fixed;
+  top: 0; }
 
 /*# sourceMappingURL=hamburguer-menu.css.map */
 
