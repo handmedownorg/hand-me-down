@@ -66,7 +66,7 @@ function createNewOath(tag, body, giver) {
     const newStatus = new Status({
       giverID: giver._id, //session
       takerID: taker._id,
-      currentHolderID: keeper._id
+      currentHolderID: giver._id
     });
 
     newStatus.save()
@@ -80,7 +80,7 @@ function createNewOath(tag, body, giver) {
         newItem
           .save()
           .then((newItem) => {
-            User.update({ _id: taker._id }, { $push: { itemsOwned: newItem } })        
+            User.update({ _id: giver._id }, { $push: { itemsKept: newItem } }).then(() => console.log("exito keeper1"))
             sendMail(keeper.email, "Do you outh to keep this?", htmlGiving(newItem.name, newItem.tag, newItem._id));
           })
 

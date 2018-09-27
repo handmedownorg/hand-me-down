@@ -37,14 +37,16 @@ router.post("/taken/:itemID", ensureLogin.ensureLoggedIn('/'), (req, res, next) 
   //change the item status
   //the array of objects of the new keeper and the old keeper is updated
 
-  Item.findById(itemID)
+  Item.findById(itemID).populate("statusID")
     .then(item => {
       itemVar = item;
-      User.update({ _id: newKeeper._id }, { $push: { itemsKept: item } }).then(()=>console.log("exito"))
         return Status.findById(item.statusID);
+      
     })
     .then(status => {
       console.log("The keeper was " + status.currentHolderID);
+      User.update({ _id: status.currentHolderID }, { $pull: { itemsOwned: itemVar } }).then(()=>console.log("exito pull keeper"))
+
       return Status.findByIdAndUpdate(
         { _id: status._id },
         { currentHolderID: newKeeper._id }
@@ -52,6 +54,9 @@ router.post("/taken/:itemID", ensureLogin.ensureLoggedIn('/'), (req, res, next) 
     })
     .then(status => {
       console.log("Now the keeper is " + status.currentHolderID);
+      itemVar.name = "otra cosa"
+      User.update({ _id: status.currentHolderID }, { $push: { itemsKept: itemVar } }).then(()=>console.log("exito push keeper"))
+
       res.render("items/confirmation");
     })
     .catch(err => {
