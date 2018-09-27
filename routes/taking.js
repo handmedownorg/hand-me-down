@@ -84,17 +84,11 @@ router.post(
               );
               isowner = "You are a keeper";
             }
-            User.update(
-              { _id: status.currentHolderID },
-              { $push: { itemsKept: itemVar } }
-            ).then(() => console.log("exito push keeper"));
-            res.render("items/confirmation", {isowner});
-            sendMail(
-              taker.email,
-              "Your item " + item.name + " is changing hands!",
-              htmlNotification(item.name, item.tag)
-            );
-            //sendMail(taker.email,`${keeper.username} is now keeping your ${newItem.name}`, htmlGiving(newItem.name, newItem.tag, newItem._id));
+            
+            User.findByIdAndUpdate(req.user._id, { $push: { itemsKept: itemVar } }, {new:true})
+            .then(user => console.log("resuelve push keeper" + status.currentHolderID));
+            res.render("items/confirmation");
+            sendMail(taker.email, "Your item " + item.name + " is changing hands!", htmlNotification(item.name, item.tag))
           })
           .catch(err => {
             res.render("error", { message: "Keeper not found" });
