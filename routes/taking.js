@@ -34,6 +34,7 @@ router.post(
     const imgPath = req.file.url;
     let tagFromAPI;
     let itemVar;
+    let isowner;
 
     getTextFromPhoto(imgPath)
       .then(url => resolveAfterWait(5000, url))
@@ -41,22 +42,30 @@ router.post(
         console.log("The TAG goes through create /POST " + textTag);
         tagFromAPI = textTag;
 
-        //HERE IT STARTS THE ITEM UPDATE
         Item.findById(itemID)
           .then(item => {
             itemVar = item;
-            if (item.tag == tagFromAPI) { //if IT'S the same tag
-              console.log("After verification the tags match => IT'S THE SAME BOOK");
+            if (item.tag == tagFromAPI) {
+              //if IT'S the same tag
+              console.log(
+                "After verification the tags match => IT'S THE SAME BOOK"
+              );
               return Status.findById(item.statusID);
-            } else { //if IT'S NOT the same tag
-              console.log("After verification the don't tags match => IT'S NOT THE SAME BOOK");
+            } else {
+              //if IT'S NOT the same tag
+              console.log(
+                "After verification the don't tags match => IT'S NOT THE SAME BOOK"
+              );
               res.render("items/wrong");
               return undefined;
             }
           })
           .then(status => {
             console.log("The keeper was " + status.currentHolderID);
-            User.update({ _id: status.currentHolderID }, { $pull: { itemsOwned: itemVar } }).then(()=>console.log("exito pull keeper"))
+            User.update(
+              { _id: status.currentHolderID },
+              { $pull: { itemsOwned: itemVar } }
+            ).then(() => console.log("exito pull keeper"));
             return Status.findByIdAndUpdate(
               { _id: status._id },
               { currentHolderID: newKeeper._id }
@@ -66,14 +75,25 @@ router.post(
             console.log("Now the keeper is " + status.currentHolderID);
             itemVar.name = "otra cosa";
             //check if the new keeper is the owner (final taker)
-            if(status.currentHolderID == status.takerID){
+            if (status.currentHolderID == status.takerID) {
               console.log("Congratulations you received your item");
-            } else{
-              console.log("This item doesn't belong to you, please give it to its owner");
+              isowner = "This is yours!";
+            } else {
+              console.log(
+                "This item doesn't belong to you, please give it to its owner"
+              );
+              isowner = "You are a keeper";
             }
-            User.update({ _id: status.currentHolderID}, { $push: { itemsKept: itemVar } }).then(()=>console.log("exito push keeper"));
-            res.render("items/confirmation");
-            sendMail(taker.email, "Your item " + item.name + " is changing hands!", htmlNotification(item.name, item.tag))
+            User.update(
+              { _id: status.currentHolderID },
+              { $push: { itemsKept: itemVar } }
+            ).then(() => console.log("exito push keeper"));
+            res.render("items/confirmation", {isowner});
+            sendMail(
+              taker.email,
+              "Your item " + item.name + " is changing hands!",
+              htmlNotification(item.name, item.tag)
+            );
             //sendMail(taker.email,`${keeper.username} is now keeping your ${newItem.name}`, htmlGiving(newItem.name, newItem.tag, newItem._id));
           })
           .catch(err => {
@@ -82,5 +102,9 @@ router.post(
       });
   }
 );
+
+router.get("/receive", (req, res, next) => {
+  res.redirect("/inventory");
+});
 
 module.exports = router;

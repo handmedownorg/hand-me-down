@@ -1,9 +1,11 @@
+/*  #54CCF2 */
+/*  #F2F1E2 */
 .entire-menu {
   position: absolute;
   padding: 20px;
   width: 100%;
   z-index: 2;
-  background-color: #54CCF2; }
+  background-color: #3162FF; }
 
 .hamburguer {
   width: 20px;
@@ -67,7 +69,7 @@
 .menu {
   max-height: 0;
   height: auto;
-  background: #54CCF2;
+  background: #3162FF;
   -webkit-transition: all 300ms ease-in-out;
   transition: all 300ms ease-in-out;
   overflow: hidden;
@@ -82,7 +84,7 @@
   padding: 5px 10px;
   display: block;
   text-transform: uppercase;
-  border-left: 5px solid #54CCF2; }
+  border-left: 5px solid #3162FF; }
 
 .menu a:hover {
   border-left: 5px solid #e57373;
