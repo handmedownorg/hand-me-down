@@ -13,6 +13,9 @@ router.get('/', ensureLogin.ensureLoggedIn('/login'), (req, res, next) => {
       console.log(user)
       const itemsOwned = user.itemsOwned;
       const itemsKept = user.itemsKept;
+      itemsKept.forEach(item => {
+        item.populate("statusID");
+      });
       res.render('../views/items/inventory', {itemsOwned, itemsKept})
     })
 })

@@ -6,7 +6,11 @@
 <h3>Items you own and other people keep:</h3>
 <ul>
 {{#each itemsOwned}}
-<li>{{this}}</li>
+<div>
+<li>{{this.name}}</li>
+<p>{{this.}}</p>
+</div>
+
 {{/each}}
 </ul>
 
