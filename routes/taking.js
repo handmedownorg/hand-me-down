@@ -12,16 +12,11 @@ const ensureLogin = require('connect-ensure-login')
 //this routes are requested after mail confirmation
 
 router.get("/take/:itemID", ensureLogin.ensureLoggedIn('/'), (req, res, next) => {
- 
+
   const itemID = encodeURIComponent(req.params.itemID);
   Item.findById(itemID).
     populate("statusID")
     .then(item => {
-      //console.log("item: --->" + item.statusID[0].takerID);
-    //   return User.findById(item.statusID[0].takerID)
-    // })
-    // .then(user => {
-      //console.log(item, user)
       const user = req.user;
       console.log("item + user: " + item, user)
       res.render("items/take", { item, user })
@@ -31,24 +26,26 @@ router.get("/take/:itemID", ensureLogin.ensureLoggedIn('/'), (req, res, next) =>
 
 // TO IMPLEMENT BELOW:
 /* sendMail(taker.email, "Your item " + item.name + " is changing hands!", htmlNotification(item.name, item.tag))
-      
-      User.update({ _id: taker._id }, { $push: { itemsOwned: newItem } })
-        .then(user => console.log(user))
-      
-        User.update({ _id: keeper._id }, { $push: { itemsKept: newItem } })
-        .then(user => console.log(user)) */
+const htmlNotification = require('../mail/templateNotification')
 
-router.post("/taken/:itemID", ensureLogin.ensureLoggedIn('/'), (req, res, next) => {  //refactor this using populate
+       */
+
+router.post("/taken/:itemID", ensureLogin.ensureLoggedIn('/'), (req, res, next) => { 
   const itemID = encodeURIComponent(req.params.itemID);
   const newKeeper = req.user;
   let itemVar;
+  
+  User.update({ _id: taker._id }, { $push: { itemsOwned: newItem } })
+    .then(user => console.log(user))
+
+  User.update({ _id: keeper._id }, { $push: { itemsKept: newItem } })
+    .then(user => console.log(user))
 
   Item.findById(itemID)
     .then(item => {
       itemVar = item;
       return Status.findById(item.statusID);
-      const htmlNotification = require('../mail/templateNotification')
-      
+
     })
     .then(status => {
       console.log("The keeper was " + status.currentHolderID);

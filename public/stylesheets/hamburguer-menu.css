@@ -3,7 +3,7 @@
   padding: 20px;
   width: 100%;
   z-index: 2;
-  background-color: blue; }
+  background-color: #54CCF2; }
 
 .hamburguer {
   width: 20px;
@@ -67,7 +67,7 @@
 .menu {
   max-height: 0;
   height: auto;
-  background: blue;
+  background: #54CCF2;
   -webkit-transition: all 300ms ease-in-out;
   transition: all 300ms ease-in-out;
   overflow: hidden;
@@ -82,7 +82,7 @@
   padding: 5px 10px;
   display: block;
   text-transform: uppercase;
-  border-left: 5px solid blue; }
+  border-left: 5px solid #54CCF2; }
 
 .menu a:hover {
   border-left: 5px solid #e57373;
