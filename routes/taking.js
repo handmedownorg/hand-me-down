@@ -35,7 +35,6 @@ router.post(
     const itemID = encodeURIComponent(req.params.itemID);
     const newKeeper = req.user;
     const imgPath = req.file.url;
-    //console.log("This is the image path " + imgPath);
     let tagFromAPI;
 
     getTextFromPhoto(imgPath)
@@ -43,18 +42,19 @@ router.post(
       .then(textTag => {
         console.log("The TAG goes through create /POST " + textTag);
         tagFromAPI = textTag;
+
+        //HERE IT STARTS THE ITEM UPDATE
         Item.findById(itemID)
           .then(item => {
-            if (item.tag == tagFromAPI) {
-              console.log(
-                "After verification the tags match => IT'S THE SAME BOOK"
-              );
-            } else {
-              console.log(
-                "After verification the don't tags match => IT'S NOT THE SAME BOOK"
-              );
+            if (item.tag == tagFromAPI) { //if IT'S the same tag
+              console.log("After verification the tags match => IT'S THE SAME BOOK");
+              return Status.findById(item.statusID);
+
+            } else { //if IT'S NOT the same tag
+              console.log("After verification the don't tags match => IT'S NOT THE SAME BOOK");
+
+              return Status.findById(item.statusID);
             }
-            return Status.findById(item.statusID);
           })
           .then(status => {
             console.log("The keeper was " + status.currentHolderID);
@@ -66,6 +66,8 @@ router.post(
           .then(status => {
             console.log("Now the keeper is " + status.currentHolderID);
             res.render("items/confirmation");
+            sendMail(taker.email, "Your item " + item.name + " is changing hands!", htmlNotification(item.name, item.tag))
+            //sendMail(taker.email,`${keeper.username} is now keeping your ${newItem.name}`, htmlGiving(newItem.name, newItem.tag, newItem._id));
           })
           .catch(err => {
             res.render("error", { message: "Keeper not found" });

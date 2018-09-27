@@ -5,35 +5,18 @@
 <div id="itemID"></div>
 
 <form action="/items/taken/{{item._id}}" enctype="multipart/form-data" class="form" method="POST" id="taken-container">
+<p>Please the a picture of the handwritten tag placed on the item you received to ensure you have it with you</p>
   <div class="input-div">
-    <label>Upload a photo of the tag to ensure you have it with you</label>
+    <label>Upload a photo</label>
     <input type="file" name="tag-photo">
   </div>
+
+  <p>PLEASE WAIT FOR TAG VALIDATION</p>
   <button type="submit"value="SAVE">Take care of this item</button>
 </form>
+
 {{#if message }}
   <div class="error-message">{{ message }}</div>
   {{/if}}
 
 
-<a href="/about">How this works?</a>
-
-
-
-{{!-- <h2>You are taking an oath:</h2>
-<div>Name of this item: {{item.name}}</div>
-<br><br>
-<div>Owner of this item: {{user.username}} </div>
-<br><br>
-<label for="password">Item's ID: {{item.tag}}</label>
-<div id="itemID"></div>
-<br><br>
-<form action="/items/taken/{{item._id}}" method="POST" id="taken-container">
-  <br>
-  {{#if message }}
-  <div class="error-message">{{ message }}</div>
-  {{/if}}
-  <br><br>
-  <button>Take care of this item</button>
-  <a href="/about">How this works?</a>
-</form> --}}

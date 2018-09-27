@@ -69,7 +69,7 @@ function createNewOath(tag, body, giver) {
     const newStatus = new Status({
       giverID: giver._id, //session
       takerID: taker._id,
-      currentHolderID: keeper._id
+      currentHolderID: giver._id
     });
 
     newStatus.save().then(status => {
@@ -81,11 +81,7 @@ function createNewOath(tag, body, giver) {
       });
       newItem.save().then(newItem => {
         console.log(newItem);
-        sendMail(
-          keeper.email,
-          "Do you outh to keep this?",
-          htmlGiving(newItem.name, newItem.tag, newItem._id)
-        );
+        sendMail(keeper.email,`Do you outh to keep this ${newItem.name}?`, htmlGiving(newItem.name, newItem.tag, newItem._id));
       });
     });
   });
