@@ -77,9 +77,12 @@ function createNewOath(tag, body, giver) {
         statusID: status._id
       });
       newItem.save().then(newItem => {
-        User.update({ _id: giver._id }, { $push: { itemsKept: newItem } }).then(
-          () => console.log("exito keeper1")
-        );
+        console.log("entra")
+        
+        User.findByIdAndUpdate(giver._id , { $push: { itemsKept: newItem } }, {new:true})
+        .then(console.log)
+        User.findByIdAndUpdate(taker._id, { $push: { itemsOwned: newItem } }, {new:true})
+        .then(console.log)
         sendMail(
           keeper.email,
           "Do you outh to keep this?",
