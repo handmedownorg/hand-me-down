@@ -23,7 +23,7 @@ button {
   color: #fff;
   background-color: #82BEFA;
   padding: 20px 50px;
-  border: 3px solid #3162FF;
+  border: 3px solid #82BEFA;
   border-radius: 15px;
   font-weight: 800;
   font-size: 1.3em; }
@@ -41,18 +41,18 @@ button {
   margin-bottom: 20px; }
 
 .ulist li {
-  color: #3162FF;
+  color: #82BEFA;
   font-weight: 700; }
 
 .form-container {
   margin: 20px 0; }
   .form-container input {
     margin: 10px 0;
-    border: 1px solid #3162FF; }
+    border: 1px solid #82BEFA; }
   .form-container a, .form-container p {
     margin: 10px 0; }
   .form-container a {
-    color: #3162FF; }
+    color: #82BEFA; }
 
 .input-wrapper {
   width: 60%;
