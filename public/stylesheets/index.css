@@ -37,3 +37,31 @@ button a {
 
 .inventory-item {
   padding: 15px; }
+
+.main-title {
+  text-align: center;
+  font-size: 1.8em; }
+
+.about-wrapper {
+  margin: 280px 0 100px 0;
+  width: 70%;
+  text-align: justify; }
+  .about-wrapper h1, .about-wrapper h2, .about-wrapper h3 {
+    margin: 20px 0;
+    text-align: center; }
+  .about-wrapper h3 {
+    margin: 10px; }
+  .about-wrapper img {
+    display: block;
+    margin: 0 auto; }
+
+.take-wrapper p, .take-wrapper div {
+  margin: 10px 0; }
+
+.take-wrapper button {
+  vertical-align: center; }
+
+#button-create {
+  line-height: 50%; }
+
+/*# sourceMappingURL=index.css.map */
