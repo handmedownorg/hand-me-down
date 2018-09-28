@@ -89,7 +89,7 @@ router.post(
             
             User.findByIdAndUpdate(req.user._id, { $push: { itemsKept: itemVar } }, {new:true})
             .then(user => console.log("resuelve push keeper" + status.currentHolderID));
-            console.log()
+            console.log(status.takerID)
             User.findById({_id: status.takerID[0]})
             .then(owner => {
               sendMail(owner.email, "Your item " + itemVar.name + " is changing hands!", htmlNotification(itemVar.name, itemVar.tag))
