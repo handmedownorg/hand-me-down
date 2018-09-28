@@ -8,6 +8,9 @@ const uploadCloud = require("../config/cloudinary.js");
 const ensureLogin = require("connect-ensure-login");
 const { getTextFromPhoto } = require("../AzureOcrAPI/getTextFromPhoto");
 const { resolveAfterWait } = require("../AzureOcrAPI/getTextFromPhoto");
+const htmlNotification = require("../mail/templateNotification");
+let ownerID;
+let statusVar;
 
 router.get(
   "/take/:itemID",
@@ -62,6 +65,7 @@ router.post(
           })
           .then(status => {
             console.log("The keeper was " + status.currentHolderID);
+            statusVar = status;
             
             User.findByIdAndUpdate(status.currentHolderID, { $pull: { itemsKept: itemVar } }, {new:true})
             .then(user => console.log("resuelve pull keeper" + status.currentHolderID))
@@ -72,20 +76,25 @@ router.post(
           })
           .then(status => {
             console.log("Now the keeper is " + status.currentHolderID);
-            if (status.currentHolderID == status.takerID) {
+            console.log(status.takerID[0]);
+            if (status.currentHolderID == status.takerID[0]) {
               console.log("Congratulations you received your item");
               isowner = "This is yours!";
             } else {
               console.log(
                 "This item doesn't belong to you, please give it to its owner"
-              );
+                );
               isowner = "You are a keeper";
             }
             
             User.findByIdAndUpdate(req.user._id, { $push: { itemsKept: itemVar } }, {new:true})
             .then(user => console.log("resuelve push keeper" + status.currentHolderID));
+            console.log()
+            User.findById({_id: status.takerID[0]})
+            .then(owner => {
+              sendMail(owner.email, "Your item " + itemVar.name + " is changing hands!", htmlNotification(itemVar.name, itemVar.tag))
+            })
             res.render("items/confirmation");
-            sendMail(taker.email, "Your item " + item.name + " is changing hands!", htmlNotification(item.name, item.tag))
           })
           .catch(err => {
             res.render("error", { message: "Keeper not found" });

@@ -61,6 +61,10 @@ button a {
 .take-wrapper button {
   vertical-align: center; }
 
+.take-wrapper {
+  display: block;
+  margin: 0 auto; }
+
 #button-create {
   line-height: 50%; }
 

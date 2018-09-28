@@ -29,7 +29,7 @@ router.post(
 
     const imgPath = req.file.url;
     const imgName = req.file.originalname;
-    res.redirect("/inventory");
+    res.redirect("/");
 
     getTextFromPhoto(imgPath)
       .then(url => resolveAfterWait(10000, url))
