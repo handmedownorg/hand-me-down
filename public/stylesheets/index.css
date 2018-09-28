@@ -65,6 +65,12 @@ footer a {
 .input-div {
   padding: 10px; }
 
+.inventory-type {
+  padding: 30px; }
+
+.inventory-item {
+  padding: 15px; }
+
 /* .main-logo {
   position: absolute;
   top: 100px;

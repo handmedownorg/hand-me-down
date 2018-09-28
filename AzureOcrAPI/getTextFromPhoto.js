@@ -5,7 +5,6 @@ require("dotenv").config({ path: ".private.env" });
 const subscriptionKey = process.env.AZUREKEY;
 const uriBase =
   "https://westcentralus.api.cognitive.microsoft.com/vision/v2.0/recognizeText?mode=Handwritten";
-
 const getTextFromPhoto = imageUrl => {
   return axios
     .post(uriBase, '{"url": ' + '"' + imageUrl + '"}', {
@@ -20,7 +19,6 @@ const getTextFromPhoto = imageUrl => {
       return url
     })
 };
-
 const resolveAfterWait = (ms, url) => {
   let resText = "SweetCharmanderClouds";
   return new Promise((resolve, reject) => {

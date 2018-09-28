@@ -2,22 +2,22 @@
 
 
 <h2>THIS ARE YOUR ITEMS:</h2>
-
-<h3>Items you own and other people keep:</h3>
-<ul>
-{{#each itemsOwned}}
-<div>
-<li>{{this.name}}</li>
-<p>{{this.}}</p>
+<div class="inventory-type">
+  <h3>Items you own and other people keep:</h3>
+  <div class="inventory-item">
+    {{#each itemsOwned}}
+    <li>{{this.name}}</li>
+    <p>{{this.tag}}</p>
+    {{/each}}
+  </div>
 </div>
 
-{{/each}}
-</ul>
-
-<h3>Items you keep and you oath to return:</h3>
-
-<ul>
-{{#each itemsKept}}
-<li>{{this}}</li>
-{{/each}}
-</ul>
+<div class="inventory-type">
+  <h3>Items you keep and you oath to return:</h3>
+  <div class="inventory-item">
+    {{#each itemsKept}}
+    <li> You have: {{this.name}}</li>
+    <p>With the tag: {{this.tag}}</p>
+    {{/each}}
+  </div>
+</div>
