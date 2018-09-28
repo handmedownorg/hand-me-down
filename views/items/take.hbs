@@ -1,23 +1,23 @@
 <img src="/images/icons/please.png" alt="please">
 <h2>You are taking an oath:</h2>
-<div>Name of this item: {{item.name}}</div>
-<div>Owner of this item: {{user.username}} </div>
-<label for="password">Item's ID: {{item.tag}}</label>
-<div id="itemID"></div>
+<div class="take-wrapper">
+  <div>Name of this item: {{item.name}}</div>
+  <div>Owner of this item: {{user.username}} </div>
+  <label for="password">Item's ID: {{item.tag}}</label>
+  <div id="itemID"></div>
 
-<form action="/items/taken/{{item._id}}" enctype="multipart/form-data" class="form" method="POST" id="taken-container">
-<p>Please the a picture of the handwritten tag placed on the item you received to ensure you have it with you</p>
-  <div class="input-div">
-    <label>Upload a photo</label>
-    <input type="file" name="tag-photo">
-  </div>
+  <form action="/items/taken/{{item._id}}" enctype="multipart/form-data" class="form" method="POST" id="taken-container">
+    <p>Please the a picture of the handwritten tag placed on the item you received to ensure you have it with you</p>
+    <div class="input-div">
+      <label>Upload a photo</label>
+      <input type="file" name="tag-photo">
 
-  <p>PLEASE WAIT FOR TAG VALIDATION</p>
-  <button type="submit"value="SAVE">Take care of this item</button>
-</form>
+      <p>PLEASE WAIT FOR TAG VALIDATION</p>
+    </div>
+    <button type="submit" value="SAVE">Take this item</button>
+  </form>
+</div>
 
 {{#if message }}
-  <div class="error-message">{{ message }}</div>
-  {{/if}}
-
-
+<div class="error-message">{{ message }}</div>
+{{/if}}

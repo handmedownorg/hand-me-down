@@ -34,7 +34,6 @@ router.get("/", ensureLogin.ensureLoggedIn("/login"), (req, res, next) => {
       console.log(itemsKept);
       res.render("../views/items/inventory", { itemsOwned, itemsKept,  StatusOwned, StatusKept});
     }) 
-    
 });
 
 module.exports = router;

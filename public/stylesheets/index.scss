@@ -1,21 +1,6 @@
 @import "variables.sass"; 
 
-*{
-  padding: 0;
-  margin: 0;
-}
 
-body {
-  background-color: $primary-color;
-  color: $secondary-color;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  border: 4px solid $primary-color;
-}
-
-a {
-  color: $primary-color;
-  text-decoration: none;
-}
 
 #main-wrapper{
   background-color: $secondary-color;
@@ -27,33 +12,15 @@ a {
   align-content: center;
   align-items: center;
   height: 70vh;
-  padding: 20px;
+  width: 100vw;
+  padding: 20px 0;
 }
 
-button{
-  color: secondary-color;
-  background-color: $primary-color;
-}
 button a {
   color: secondary-color;
-  padding: 20px;
   text-decoration: none;
 }
 
-footer{
-  color: $secondary-color;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
-  align-self: flex-end;
-}
-footer a{
-  padding: 20px;
-  color: $secondary-color;
-  text-decoration: none;
-}
 
 .form-wrapper{
   display: flex;
@@ -79,28 +46,40 @@ footer a{
   padding: 15px;
 }
 
-
-
-/* .main-logo {
-  position: absolute;
-  top: 100px;
-}
-
 .main-title {
-  position: absolute;
-  top: 180px;
+  text-align: center;
+  font-size: 1.8em
 }
 
-.giving-button {
-  position: fixed;
-  top: 60vh;
-  display: block;
-  padding: 10px;
+.about-wrapper {
+  margin: 280px 0 100px 0;
+  width: 70%;
+  text-align: justify;
+  h1, h2, h3 {
+    margin: 20px 0;
+    text-align: center;
+  }
+
+  h3 {
+    margin: 10px;
+  }
+  img {
+    display: block;
+    margin: 0 auto;
+  }
 }
 
-.taking-button {
-  position: fixed;
-  top: 70vh;
-  display: block;
-  padding: 10px;
-} */
+.take-wrapper {
+  p, div{
+    margin: 10px 0;
+  }
+  button {
+    vertical-align: center;
+  }
+}
+
+#button-create {
+  
+  line-height: 50%
+
+}

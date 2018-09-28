@@ -1,23 +1,25 @@
 <img src="/images/icons/love.png" alt="love">
 <h2>Join Hand-me-down</h2>
 
-<form action="/signup" method="POST" id="form-container">
-  <label for="username">Username</label>
-  <input id="username" type="text" name="username" placeholder="The Keeper">
-
-  <br><br>
-
-  <label for="email">Email</label>
-  <input id="email" type="text" name="email" placeholder="Your beautiful email">
-
-  <br><br>
-
-  <label for="password">Password</label>
-  <input id="password" type="password" name="password" placeholder="Your password">
-  <br>
-  {{#if message }}
-    <div class="error-message">{{ message }}</div>
-  {{/if}}
+<form action="/signup" method="POST" class="form-container">
+  <div class="input-wrapper">
+    <label for="username">Username</label>
+    <input id="username" type="text" name="username" placeholder="The Keeper">
+  
+    <br><br>
+  
+    <label for="email">Email</label>
+    <input id="email" type="text" name="email" placeholder="Your beautiful email">
+  
+    <br><br>
+  
+    <label for="password">Password</label>
+    <input id="password" type="password" name="password" placeholder="Your password">
+    <br>
+    {{#if message }}
+      <div class="error-message">{{ message }}</div>
+    {{/if}}
+  </div>
 
   <br><br>
 

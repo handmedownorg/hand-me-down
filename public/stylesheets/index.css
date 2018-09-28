@@ -1,52 +1,19 @@
-/*  #54CCF2 */
 /*  #F2F1E2 */
-* {
-  padding: 0;
-  margin: 0; }
-
-body {
-  background-color: #3162FF;
-  color: #fff;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-  border: 4px solid #3162FF; }
-
-a {
-  color: #3162FF;
-  text-decoration: none; }
-
 #main-wrapper {
   background-color: #fff;
   align-self: center;
-  color: #3162FF;
+  color: #82BEFA;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-content: center;
   align-items: center;
   height: 70vh;
-  padding: 20px; }
-
-button {
-  color: secondary-color;
-  background-color: #3162FF; }
+  width: 100vw;
+  padding: 20px 0; }
 
 button a {
   color: secondary-color;
-  padding: 20px;
-  text-decoration: none; }
-
-footer {
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
-  align-self: flex-end; }
-
-footer a {
-  padding: 20px;
-  color: #fff;
   text-decoration: none; }
 
 .form-wrapper {
@@ -70,29 +37,3 @@ footer a {
 
 .inventory-item {
   padding: 15px; }
-
-/* .main-logo {
-  position: absolute;
-  top: 100px;
-}
-
-.main-title {
-  position: absolute;
-  top: 180px;
-}
-
-.giving-button {
-  position: fixed;
-  top: 60vh;
-  display: block;
-  padding: 10px;
-}
-
-.taking-button {
-  position: fixed;
-  top: 70vh;
-  display: block;
-  padding: 10px;
-} */
-
-/*# sourceMappingURL=index.css.map */
